@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.boot.mapper.ProblemMapper">
+    <select id="searchAll" resultType="cn.edu.cqu.boot.entity.Problem">
+        select * from problem
+    </select>
+    <select id="searchProblemById" resultType="cn.edu.cqu.boot.entity.Problem">
+        select * from problem where problemId=#{problemId}
+    </select>
+    <insert id="addProblem" parameterType="cn.edu.cqu.boot.entity.Problem">
+        insert into problem(problemDesc,optionOne,optionTwo,optionThree,optionFour,answer,isRight,isFalse)
+        values (#{problemDesc},#{optionOne},#{optionTwo},#{optionThree},#{optionFour},#{answer},#{isRight},#{isFalse})
+        <selectKey resultType="Integer" keyProperty="problemId" order="AFTER">
+            <!--当前连接中最后产生的id号-->
+            select last_insert_id()
+        </selectKey>
+    </insert>
+    <update id="updateProblemById" parameterType="cn.edu.cqu.boot.entity.Problem">
+        update problem set problemDesc=#{problemDesc},optionOne=#{optionOne},optionTwo=#{optionTwo},optionThree=#{optionThree},
+                           optionFour=#{optionFour},answer=#{answer},isRight=#{isRight},isFalse=#{isRight}
+        where problemId=#{problemId}
+    </update>
+    <delete id="deleteProblemById" parameterType="int">
+        delete from problem where problemId=#{problemId}
+    </delete>
+
+</mapper>
