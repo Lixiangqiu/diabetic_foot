@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.boot.mapper.UserMapper">
+    <!--查询所有用户信息-->
+    <select id="searchAll" resultType="cn.edu.cqu.boot.entity.User">
+        select * from user
+    </select>
+    <!--根据用户ID查询用户信息-->
+    <select id="searchUserById" resultType="cn.edu.cqu.boot.entity.User">
+        select * from user where userId=#{userId}
+    </select>
+    <!--新用户注册-->
+    <insert id="userRegister" parameterType="cn.edu.cqu.boot.entity.User">
+        insert into user(username,password,gender,age,email,role) values(#{username},#{password},#{gender},#{age},#{email},#{role})
+        <selectKey resultType="Integer" keyProperty="userId" order="AFTER">
+            <!--当前连接中最后产生的id号-->
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!--用户登录-->
+    <select id="userLogin" resultType="cn.edu.cqu.boot.entity.User">
+        select * from user
+        where username=#{username} and password=#{password}
+    </select>
+    <!--用户信息自更新-->
+    <update id="userUpdateUser" parameterType="cn.edu.cqu.boot.entity.User">
+        update user set username=#{username},password=#{password},gender=#{gender},age=#{age},email=#{email}
+        where userId=#{userId}
+    </update>
+    <!--管理员更新用户信息-->
+    <update id="userUpdateAdmin" parameterType="cn.edu.cqu.boot.entity.User">
+        update user set username=#{username},password=#{password},gender=#{gender},age=#{age},email=#{email},role=#{role}
+        where userId=#{userId}
+    </update>
+</mapper>

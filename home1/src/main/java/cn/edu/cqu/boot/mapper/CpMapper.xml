@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace=" cn.edu.cqu.boot.mapper.CpMapper">
+    <select id="searchAll" resultType="cn.edu.cqu.boot.entity.Cp">
+        select * from cp
+    </select>
+    <select id="searchByCpId" parameterType="int" resultType="cn.edu.cqu.boot.entity.Cp">
+        select * from cp where cpId = #{cpId}
+    </select>
+    <select id="searchByDoctorId" parameterType="int" resultType="cn.edu.cqu.boot.entity.Cp">
+        select * from cp where doctorId = #{doctorId}
+    </select>
+    <select id="searchByPatientId" parameterType="int" resultType="cn.edu.cqu.boot.entity.Cp">
+        select * from cp where patientId = #{patientId}
+    </select>
+    <insert id="insertCp" parameterType="cn.edu.cqu.boot.entity.Cp">
+        insert into cp(doctorId,patientId,date,paraT1,paraM1,paraM2,paraM3,paraM4,paraM5,paraHL,paraHM,caseDesc)
+        values (#{doctorId},#{patientId},#{date},#{paraT1},#{paraM1},#{paraM2},#{paraM3},#{paraM4},#{paraM5},#{paraHL},#{paraHM},#{caseDesc})
+    </insert>
+</mapper>
