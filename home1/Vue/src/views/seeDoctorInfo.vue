@@ -102,6 +102,14 @@ export default {
     },
 
     load(){
+      if(this.doctor.doctorId == undefined){
+        this.$message({
+          type:"error",
+          message:"无医生有效信息"
+        })
+          this.$router.push("/doctorInfo")
+          return
+      }
       request.get("/api/allUser/findOneDoctor",{
         params:{
           doctorId:this.doctor.doctorId
