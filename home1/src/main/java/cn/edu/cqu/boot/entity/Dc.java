@@ -9,12 +9,22 @@ package cn.edu.cqu.boot.entity;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
 public class Dc implements Serializable {
 
-    @TableId(value = "Dcid", type = IdType.AUTO)
-    private Integer Dcid;
+    @TableId(value = "dcid", type = IdType.AUTO)
+    private Integer dcId;
+
+    @TableField("cpid")
+    private Integer cpId;
+
+    @TableField("doctorid")
+    private Integer doctorId;
+
+    @TableField("caseDesc")
+    private String caseDesc;
 }

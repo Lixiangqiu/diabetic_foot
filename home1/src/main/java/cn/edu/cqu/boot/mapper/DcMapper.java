@@ -6,7 +6,17 @@
  */
 package cn.edu.cqu.boot.mapper;
 
+import cn.edu.cqu.boot.entity.AllUser;
+import cn.edu.cqu.boot.entity.Cp;
 import com.github.yulichang.base.MPJBaseMapper;
+import cn.edu.cqu.boot.entity.Dc;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
-public interface DcMapper extends MPJBaseMapper {
+import java.util.List;
+
+public interface DcMapper extends MPJBaseMapper<Dc> {
+    public List<Dc> searchAll(); //查询所有用户信息
+
+    public List<Dc> searchByCpId(@RequestParam int cpId);
 }
