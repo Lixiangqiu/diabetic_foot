@@ -8,5 +8,6 @@ import '@/assets/css/global.css'
 import 'dayjs/locale/zh-cn'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'bootstrap'
+import './permission'
 
 createApp(App).use(store).use(router).use(ElementPlus,{ locale,size:"small"}).mount('#app')
