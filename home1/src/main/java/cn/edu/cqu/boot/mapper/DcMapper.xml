@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cqu.boot.mapper.DcMapper">
+    <select id="searchAll" resultType="cn.edu.cqu.boot.entity.Dc">
+        select * from dc
+    </select>
+    <select id="searchByCpId" parameterType="int" resultType="cn.edu.cqu.boot.entity.Dc">
+        select * from dc where cpid=#{cpId}
+    </select>
+</mapper>
