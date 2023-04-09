@@ -57,7 +57,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[3, 6, 9]"
+          :page-sizes="[9, 6, 3]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
@@ -72,7 +72,7 @@
           <el-input v-model="form.password" style="width:80%"></el-input>
         </el-form-item>
         <el-form-item label="权限">
-          <el-input v-model="form.role" style="width:80%" placeholder="1:管理员 2:医生 3:病人"></el-input>
+          <el-input v-model="form.role" disabled=true style="width:80%" placeholder="1"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -103,7 +103,7 @@ export default {
       dialogVisible:false,
       search:'',
       currentPage:1,
-      pageSize:3,
+      pageSize:9,
       total:0,
       tableData: [],
       user:{}
@@ -137,7 +137,7 @@ export default {
 
     Add(){
       this.dialogVisible = true
-      this.form={}
+      this.form={role:1}
       // request.post("/api/allUser/saveData")
       //this.$refs['upload'].clearFiles()
     },
@@ -174,6 +174,7 @@ export default {
       }
       this.dialogVisible = false
       this.load()
+      location.reload()
     },
 
     handleEdit(row){

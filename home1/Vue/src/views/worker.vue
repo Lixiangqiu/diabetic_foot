@@ -74,7 +74,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[3, 6, 9]"
+            :page-sizes="[9, 6, 3]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -96,7 +96,7 @@
             <el-input v-model="form.email" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="权限">
-            <el-input v-model="form.role" style="width:80%" placeholder="2"></el-input>
+            <el-input v-model="form.role" disabled=true style="width:80%" placeholder="2"></el-input>
           </el-form-item>
           <span class="dialog-footer" style="margin-left: 30px ;display: flex;justify-content: space-around;align-items: center">
             <el-button @click="dialogVisible = false">取 消</el-button>
@@ -124,7 +124,7 @@ export default {
       dialogVisible:false,
       search:'',
       currentPage:1,
-      pageSize:3,
+      pageSize:9,
       total:0,
       tableData: [],
       user:{},
@@ -153,7 +153,7 @@ export default {
 
     Add(){
       this.dialogVisible = true
-      this.form={}
+      this.form={role:2}
     },
 
     saveData(){
@@ -188,6 +188,7 @@ export default {
       }
       this.dialogVisible = false
       this.load()
+      location.reload()
     },
 
     handleEdit(row){
@@ -233,6 +234,7 @@ export default {
       }).then(res =>{
         console.log(res)
         this.tableData = res.data.records
+        console.log('tableData',this.tableData)
         this.total=res.data.total
         this.currentPage=res.data.current
         this.pageSize=res.data.size
