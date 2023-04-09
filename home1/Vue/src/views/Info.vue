@@ -1,7 +1,7 @@
 <template>
     <el-card class="container">
 
-      <div style="font-size: 18px;"><i>{{form.name}}</i> 详细资料</div>
+      <div style="font-size: 18px;"><i>{{userData.name}}</i> 详细资料</div>
       <hr style="transform: translateY(5px);"/>
 
       <el-descriptions
@@ -9,43 +9,43 @@
           size="Default"
           border
           style="margin-top: 20px;"
-          v-if="form.role === 3"
+          v-if="userData.role === 3"
       >
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">用户名</div>
           </template>
-          {{form.name}}
+          {{userData.name}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">年龄</div>
           </template>
-          {{form.age}}岁
+          {{userData.age}}岁
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">性别</div>
           </template>
-          {{form.gender}}
+          {{userData.gender}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">邮箱</div>
           </template>
-          {{form.email}}
+          {{userData.email}}
         </el-descriptions-item>
         <el-descriptions-item >
           <template #label>
             <div class="cell-item" >家庭住址</div>
           </template>
-          {{form.patientAddress}}
+          {{userData.patientAddress}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item" >联系电话</div>
           </template>
-          {{form.patientPhone}}
+          {{userData.patientPhone}}
         </el-descriptions-item>
       </el-descriptions>
 
@@ -54,37 +54,37 @@
           size="Default"
           border
           style="margin-top: 20px;"
-          v-if="form.role === 2"
+          v-if="userData.role === 2"
       >
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">用户名</div>
           </template>
-          {{form.name}}
+          {{userData.name}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">年龄</div>
           </template>
-          {{form.age}}岁
+          {{userData.age}}岁
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">性别</div>
           </template>
-          {{form.gender}}
+          {{userData.gender}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">邮箱</div>
           </template>
-          {{form.email}}
+          {{userData.email}}
         </el-descriptions-item>
         <el-descriptions-item >
           <template #label>
             <div class="cell-item">职位</div>
           </template>
-          {{form.doctorPosition}}
+          {{userData.doctorPosition}}
         </el-descriptions-item>
       </el-descriptions>
 
@@ -93,31 +93,31 @@
           size="Default"
           border
           style="margin-top: 20px;"
-          v-if="form.role === 1"
+          v-if="userData.role === 1"
       >
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">用户名</div>
           </template>
-          {{form.name}}
+          {{userData.name}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">年龄</div>
           </template>
-          {{form.age}}岁
+          {{userData.age}}岁
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">性别</div>
           </template>
-          {{form.gender}}
+          {{userData.gender}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">邮箱</div>
           </template>
-          {{form.email}}
+          {{userData.email}}
         </el-descriptions-item>
       </el-descriptions>
 
@@ -125,7 +125,7 @@
       <div style="margin:10px 0 0 400px;"><el-button type="primary" plain size="normal" @click="handleSelect">修改</el-button></div>
       <el-divider style="transform: translateY(-10px)"></el-divider>
 
-      <div v-if="form.role === 3" style="transform: translateY(-10px)">
+      <div v-if="userData.role === 3" style="transform: translateY(-10px)">
         <h2>就诊记录</h2>
         <el-collapse  v-model="activeNames" accordion>
           <el-collapse-item :title="cp.date" v-for="cp in cpList" :key="cp.cpId" :name="cp.cpId">
@@ -184,6 +184,7 @@ export default {
   data() {
     return {
       form: {},
+      userData: {},
       dialogVisible2:false,
       userPhoto:'',
       cpList:[
@@ -227,6 +228,7 @@ export default {
   created() {
     let str = sessionStorage.getItem("user") || "{}"
     this.form = JSON.parse(str)
+    this.userData = JSON.parse(str)
     this.$store.commit("update",this.form)
     this.userPhoto = this.$store.state.userPhoto
     this.load()
@@ -239,7 +241,9 @@ export default {
 
     handleSelect(){
       this.dialogVisible2 = true
-      this.$refs['upload'].clearFiles()
+      // this.$refs['upload'].clearFiles()
+      
+      
     },
     filesUploadSuccess(res){
       console.log(res)
@@ -248,7 +252,9 @@ export default {
     cancel(){
       let str = sessionStorage.getItem("user") || "{}"
       this.form = JSON.parse(str)
+      this.userData = JSON.parse(str)
       this.dialogVisible2 = false
+      
     },
     updatePatient() {
         request.put("/api/allUser/updateDataPatient", this.form).then(res => {
@@ -261,6 +267,7 @@ export default {
             sessionStorage.setItem("user", JSON.stringify(this.form))
             let str = sessionStorage.getItem("user") || "{}"
             this.form = JSON.parse(str)
+            this.userData = JSON.parse(str)
             this.$store.commit("update",this.form)
             this.userPhoto = this.$store.state.userPhoto
           } else {
@@ -283,6 +290,7 @@ export default {
           sessionStorage.setItem("user", JSON.stringify(this.form))
           let str = sessionStorage.getItem("user") || "{}"
           this.form = JSON.parse(str)
+          this.userData = JSON.parse(str)
           this.$store.commit("update",this.form)
           this.userPhoto = this.$store.state.userPhoto
         } else {
@@ -305,6 +313,7 @@ export default {
           sessionStorage.setItem("user", JSON.stringify(this.form))
           let str = sessionStorage.getItem("user") || "{}"
           this.form = JSON.parse(str)
+          this.userData = JSON.parse(str)
           this.$store.commit("update",this.form)
           this.userPhoto = this.$store.state.userPhoto
         } else {
@@ -321,6 +330,8 @@ export default {
       request.post("/api/allUser/showOneInfo",this.form).then(res =>{
         console.log(res)
         this.form = res.data
+        this.userData = res.data
+        console.log('form',this.form.doctorPosition)
       })
       if(this.form.role === 3){
         this.loadCp()

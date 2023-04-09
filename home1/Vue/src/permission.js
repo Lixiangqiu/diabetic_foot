@@ -6,7 +6,6 @@ router.beforeEach((to, from, next) => {
   console.log(to.matched);
   let user = JSON.parse(sessionStorage.getItem('user')||"{}")
   if (to.matched.some(record => record.meta.requiresManage)) {
-    console.log('此页面需要管理员权限！')
     if (user.role !== 1) {  // 管理员没登录
       ElMessage({
         type: 'error',
