@@ -35,12 +35,6 @@
           </template>
           {{form.email}}
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template #label>
-            <div class="cell-item">密码</div>
-          </template>
-          {{form.password}}
-        </el-descriptions-item>
         <el-descriptions-item >
           <template #label>
             <div class="cell-item" >家庭住址</div>
@@ -86,12 +80,6 @@
           </template>
           {{form.email}}
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template #label>
-            <div class="cell-item">密码</div>
-          </template>
-          {{form.password}}
-        </el-descriptions-item>
         <el-descriptions-item >
           <template #label>
             <div class="cell-item">职位</div>
@@ -131,12 +119,6 @@
           </template>
           {{form.email}}
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template #label>
-            <div class="cell-item">密码</div>
-          </template>
-          {{form.password}}
-        </el-descriptions-item>
       </el-descriptions>
 
 
@@ -156,9 +138,6 @@
         <el-form ref="form" :model="form" label-width="80px" :rules="rules">
           <el-form-item label="用户名" prop="name">
             <el-input v-model="form.name" disabled style="margin-bottom: 20px"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="form.password" show-password style="margin-bottom: 20px"></el-input>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
             <el-input v-model="form.age" style="margin-bottom: 20px"></el-input>
