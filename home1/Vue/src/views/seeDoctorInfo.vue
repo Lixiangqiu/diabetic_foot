@@ -140,7 +140,8 @@ export default {
           this.$message({
             type:"success",
             message:"已成功将文件发送给医生"
-          })}else{
+          })
+        }else{
           this.$message({
             type:"error",
             message:res.msg
