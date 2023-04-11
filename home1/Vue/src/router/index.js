@@ -63,11 +63,21 @@ const routes = [
             name: 'dMp',
             component: () => import('@/views/dMp'),
             meta: {
-              title: '病历界面',
+              title: '个人病历',
               url: '@/views/dMp',
               requiresDoctor: true 
             },
         },
+        {
+          path: 'dMpOther',
+          name: 'dMpOther',
+          component: () => import('@/views/dMpOther'),
+          meta: {
+            title: '病历界面',
+            url: '@/views/dMpOther',
+            requiresDoctor: true 
+          },
+      },
         //公共界面
         {
             path: 'im',

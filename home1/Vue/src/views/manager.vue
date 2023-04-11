@@ -92,7 +92,7 @@
 
 
 import request from "@/utils/request";
-
+import md5 from 'js-md5'
 export default {
   name:"manager",
   components:{
@@ -144,6 +144,7 @@ export default {
 
     saveData(){
       if(this.form.id){
+        this.form.password = md5(this.form.password)
         request.put("/api/allUser/updateData",this.form).then(res =>{
           console.log(res)
           if(res.code === 0){
@@ -158,6 +159,7 @@ export default {
           }
         })
       }else {
+        this.form.password = md5(this.form.password)
         request.post("/api/allUser/saveData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
@@ -197,6 +199,7 @@ export default {
             message:res.msg
           })
         }
+        location.reload()
       })
       this.load()
     },

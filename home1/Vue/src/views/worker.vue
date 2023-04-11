@@ -13,22 +13,22 @@
         <el-table-column
             align="center"
             sortable
-            prop="id"
+            prop="doctorId"
             label="ID号" width="80px">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="name"
+            prop="doctorName"
             label="姓名">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="gender"
+            prop="doctorGender"
             label="性别">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="age"
+            prop="doctorAge"
             label="年龄">
         </el-table-column>
         <el-table-column
@@ -38,12 +38,8 @@
         </el-table-column>
         <el-table-column
             align="center"
-            label="角色">
-          <template #default="scope">
-            <span v-if="scope.row.role===2">医生</span>
-            <span v-if="scope.row.role===3">病人</span>
-            <span v-if="scope.row.role===1">管理员</span>
-          </template>
+            prop="doctorPosition"
+            label="职位">
         </el-table-column>
         <el-table-column
             align="center"
@@ -84,20 +80,28 @@
       <el-dialog title="更新信息" v-model="dialogVisible" width="30%">
         <el-form :model="form" label-width="120px">
           <el-form-item label="名称">
-            <el-input v-model="form.name" style="width:80%"></el-input>
+            <el-input v-model="form.doctorName" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-input v-model="form.gender" style="width:80%"></el-input>
+            <el-input v-model="form.doctorGender" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="年龄">
-            <el-input v-model="form.age" style="width:80%"></el-input>
+            <el-input v-model="form.doctorAge" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="邮箱">
-            <el-input v-model="form.email" style="width:80%"></el-input>
+            <el-input v-model="form.doctorEmail" style="width:80%"></el-input>
+          </el-form-item>
+          <el-form-item label="职位">
+            <el-input v-model="form.doctorPosition" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="权限">
             <el-input v-model="form.role" disabled=true style="width:80%" placeholder="2"></el-input>
           </el-form-item>
+          <!-- <el-form-item label="图片">
+            <el-upload ref='upload' class="upload-demo" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
+              <el-button type="primary">点击上传</el-button>
+            </el-upload>
+          </el-form-item> -->
           <span class="dialog-footer" style="margin-left: 30px ;display: flex;justify-content: space-around;align-items: center">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="saveData">确 定</el-button>
@@ -141,6 +145,9 @@ export default {
         role: [
           { required: true, message: '权限设置：2为医生，3为病人', trigger: 'blur',type: "enum", enum: ['2', '3'] },
         ],
+        doctorPosition: [
+          { required: true, message: '请正确输入职位', type : "string", trigger: 'blur',min:3, pattern : /[\u4e00-\u9fa5]/g,},
+        ],
       },
     }
   },
@@ -170,6 +177,7 @@ export default {
               message:res.msg
             })
           }
+          location.reload()
         })
       }else {
         request.post("/api/allUser/saveData", this.form).then(res => {
@@ -184,11 +192,11 @@ export default {
               message:res.msg
             })
           }
+          location.reload()
         })
       }
       this.dialogVisible = false
       this.load()
-      location.reload()
     },
 
     handleEdit(row){
@@ -210,7 +218,9 @@ export default {
             message:res.msg
           })
         }
+      location.reload()
       })
+      
       this.load()
     },
 
@@ -222,6 +232,11 @@ export default {
     handleCurrentChange(pageNum){
       this.currentPage = pageNum
       this.load()
+    },
+
+    filesUploadSuccess(res){
+      console.log(res)
+      this.form.doctorPic = res.data
     },
 
     load(){

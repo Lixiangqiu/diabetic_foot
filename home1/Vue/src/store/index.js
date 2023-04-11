@@ -7,7 +7,6 @@ export default createStore({
   mutations: {
     update(state,user){
       state.userPhoto = user.photo
-      console.log(state.userPhoto)
     }
   },
   actions: {

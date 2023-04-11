@@ -20,7 +20,13 @@
         <template #title>
           <i class="el-icon-location"></i ><span style="color: #080808">功能模块</span>
         </template>
-        <el-menu-item index="/dMP" style="color: #292929" v-if="user.role ===2"><i class="el-icon-s-custom" ></i>病历管理</el-menu-item>
+        <el-submenu v-if="user.role !== 1">
+          <template #title>
+            <i class="el-icon-s-custom"></i ><span style="color: #080808">病历管理</span>
+          </template>
+            <el-menu-item index="/dMP" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user-solid" ></i>个人病历</el-menu-item>
+            <el-menu-item index="/dMPOther" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user" ></i>他人病历</el-menu-item>
+        </el-submenu>
         <el-menu-item index="/doctorInfo" style="color: #292929" v-if="user.role ===3"><i class="el-icon-dish"></i>选择医师</el-menu-item>
         <el-menu-item index="/im"> <i class="el-icon-chat-dot-round"></i>在线咨询</el-menu-item>
         <el-menu-item index="/commentList" style="color: #292929"><i class="el-icon-dish"></i>热门讨论</el-menu-item>

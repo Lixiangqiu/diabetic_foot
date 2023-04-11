@@ -148,9 +148,6 @@
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="form.email" style="margin-bottom: 20px"></el-input>
           </el-form-item>
-          <el-form-item label="职位" v-if="form.role === 2" prop="doctorPosition">
-            <el-input v-model="form.doctorPosition" style="margin-bottom: 20px"></el-input>
-          </el-form-item>
           <el-form-item label="住址" v-if="form.role === 3" prop="patientAddress">
             <el-input v-model="form.patientAddress" style="margin-bottom: 20px"></el-input>
           </el-form-item>
@@ -158,7 +155,7 @@
             <el-input v-model="form.patientPhone" style="margin-bottom: 20px"></el-input>
           </el-form-item>
           <el-form-item label="图片">
-            <el-upload ref="upload" class="upload-demo" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
+            <el-upload class="upload-demo" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
               <el-button type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -201,17 +198,11 @@ export default {
       ],
       activeNames:1,
       rules: {
-        password: [
-          { required: true, message: '请正确输入密码,长度在3到15个字符', pattern : /^[A-Za-z0-9]+$/g, type : "string", trigger: 'blur', min: 3, max: 15 },
-        ],
         gender: [
           { required: true, message: '请正确输入性别', type: "enum", enum: ['男', '女'],trigger: 'blur' },
         ],
         age: [
           { required: true, message: '请正确输入年龄', pattern : /^([1-9]|[1-9][0-9]|[1][0-9][0-9])$/g, type : "string", trigger: 'blur' },
-        ],
-        doctorPosition: [
-          { required: true, message: '请正确输入职位', type : "string", trigger: 'blur',min:3, pattern : /[\u4e00-\u9fa5]/g,},
         ],
         email: [
           { required: true, message: '请正确输入邮箱', type: 'email', trigger: 'blur' },
@@ -241,7 +232,7 @@ export default {
 
     handleSelect(){
       this.dialogVisible2 = true
-      // this.$refs['upload'].clearFiles()
+      this.$refs['upload'].clearFiles()
       
       
     },
@@ -304,7 +295,6 @@ export default {
     },
     update() {
       request.put("/api/allUser/updateDataManager", this.form).then(res => {
-        console.log(res)
         if (res.code === 0) {
           this.$message({
             type: "success",
@@ -315,6 +305,7 @@ export default {
           this.form = JSON.parse(str)
           this.userData = JSON.parse(str)
           this.$store.commit("update",this.form)
+          console.log('update',this.$store.state)
           this.userPhoto = this.$store.state.userPhoto
         } else {
           this.$message({
@@ -331,7 +322,6 @@ export default {
         console.log(res)
         this.form = res.data
         this.userData = res.data
-        console.log('form',this.form.doctorPosition)
       })
       if(this.form.role === 3){
         this.loadCp()
