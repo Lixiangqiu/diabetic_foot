@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="email"
+            prop="doctorEmail"
             label="Email">
         </el-table-column>
         <el-table-column
@@ -164,7 +164,7 @@ export default {
     },
 
     saveData(){
-      if(this.form.id){
+      if(this.form.doctorId){
         request.put("/api/allUser/updateDataDoctor",this.form).then(res =>{
           console.log(res)
           if(res.code === 0){
