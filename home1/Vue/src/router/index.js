@@ -6,23 +6,41 @@ const routes = [
     path: '/',
     name: 'Layout',
     component: Layout,
-    redirect:'/manager',
+    redirect:'/login',
     children:[
+      //管理员
         {
           path: 'manager',
           name: 'Manager',
-          component: () => import('@/views/manager')
+          component: () => import('@/views/manager'),
+          meta: {
+            title: '管理员界面',
+            url: '@/views/manager',
+            requiresManage: true 
+          },
        },
         {
           path: 'user',
           name: 'User',
-          component: () => import('@/views/user')
+          component: () => import('@/views/user'),
+          meta: {
+            title: '用户管理界面',
+            url: '@/views/user',
+            requiresManage: true 
+          },
         },
         {
           path: 'worker',
           name: 'Worker',
-          component: () => import('@/views/worker')
+          component: () => import('@/views/worker'),
+          meta: {
+            title: '医生管理界面',
+            url: '@/views/worker',
+            requiresManage: true 
+          },
         },
+
+        //用户界面
         {
             path: 'Info',
             name: 'Info',
@@ -38,11 +56,19 @@ const routes = [
             name: 'Tiezi',
             component: () => import('@/views/tiezi')
         },
+
+        //医生界面
         {
             path: 'dMp',
             name: 'dMp',
-            component: () => import('@/views/dMp')
+            component: () => import('@/views/dMp'),
+            meta: {
+              title: '病历界面',
+              url: '@/views/dMp',
+              requiresDoctor: true 
+            },
         },
+        //公共界面
         {
             path: 'im',
             name: 'Im',

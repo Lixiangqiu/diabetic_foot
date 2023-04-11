@@ -71,7 +71,7 @@ export default {
   name: "seeDoctorInfo",
   data() {
     return {
-      doctor: {},
+      doctorId:'',
       user:{},
       form:{},
       doctorInfo:{},
@@ -80,8 +80,6 @@ export default {
     }
   },
   created() {
-    let str = sessionStorage.getItem("doctor") || "{}"
-    this.doctor = JSON.parse(str)
     let str1 = sessionStorage.getItem("user") || "{}"
     this.user = JSON.parse(str1)
     this.load()
@@ -102,9 +100,18 @@ export default {
     },
 
     load(){
+      if(this.$route.query.doctorId == undefined){
+        this.$message({
+          type:"error",
+          message:"无医生有效信息"
+        })
+          this.$router.push("/doctorInfo")
+          return
+      }
+      this.doctorId = this.$route.query.doctorId
       request.get("/api/allUser/findOneDoctor",{
         params:{
-          doctorId:this.doctor.doctorId
+          doctorId:this.doctorId
         }
       }).then(res =>{
         console.log(res)
@@ -122,10 +129,11 @@ export default {
     },
 
     selectDoctor(){
+      this.doctorId = this.$route.query.doctorId
       request.get("/api/cp/insertCp",{
         params:{
           id:this.user.id,
-          doctorId:this.doctor.doctorId
+          doctorId:this.doctorId
         }
       }).then(res=>{
         if(res.code === 0){

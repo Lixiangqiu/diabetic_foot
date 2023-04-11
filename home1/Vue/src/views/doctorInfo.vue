@@ -88,8 +88,14 @@ export default {
     },
 
     handleEdit(doctor){
-      sessionStorage.setItem("doctor", JSON.stringify(doctor))  // 缓存用户信息
-      this.$router.push("/seeDoctorInfo")
+      // sessionStorage.setItem("doctor", JSON.stringify(doctor))  // 缓存用户信息
+      console.log('doctor',doctor)
+      this.$router.push({
+                    path: "/seeDoctorInfo",
+                    query: {
+                      doctorId: doctor.doctorId
+                    }
+                })
     },
 
     ///////
