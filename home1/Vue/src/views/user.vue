@@ -202,12 +202,14 @@ export default {
           this.$message({
             type:"success",
             message:"删除成功"
+            
           })}else{
           this.$message({
             type:"error",
             message:res.msg
           })
         }
+        location.reload()
       })
       this.load()
     },
