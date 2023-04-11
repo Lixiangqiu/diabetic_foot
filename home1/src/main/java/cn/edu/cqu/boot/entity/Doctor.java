@@ -93,6 +93,12 @@ public class Doctor implements Serializable {
     @TableField("doctorPic")
     private String doctorPic;
 
+    @TableField("doctorEmail")
+    private String doctorEmail;
+
+    @TableField("doctorGender")
+    private String doctorGender;
+
 }
 
 

@@ -196,9 +196,13 @@ public class AllUserController {
     public Result<?> findPage3(@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "5") Integer pageSize,
                                @RequestParam(defaultValue = "") String search) {
-        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "2").like(AllUser::getName, search));
-        System.out.println(userIPage);
-        return Result.success(userIPage);
+//        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "2").like(AllUser::getName, search));
+//        IPage<Patient> patientIPage = allUserMapper.
+//        Doctor doctor = doctorMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
+//                eq(AllUser::getPassword, Hash.encode(user.getPassword())));
+        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+        System.out.println(doctorIPage);
+        return Result.success(doctorIPage);
     }
 
     @GetMapping("/findPage2")   //查询权限为病人的用户
@@ -277,7 +281,7 @@ public class AllUserController {
 //        final int exitCode = process.waitFor();
 //        System.out.println(exitCode == 0);
 //        System.err.println("0");
-        return Result.success(res.getId());
+        return Result.success(res);
     }
 
     @PostMapping("/register")  //用户注册页 用户名不能重复
