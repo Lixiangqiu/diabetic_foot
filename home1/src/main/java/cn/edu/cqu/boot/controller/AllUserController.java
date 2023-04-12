@@ -76,9 +76,9 @@ public class AllUserController {
     }
 
     @PostMapping("/saveData")   //管理员新增用户保存
-    public Result<?> saveData(@RequestBody AllUser user) {
+    public Result<?> saveData(@RequestBody AllUser user) throws Exception {
         if (user.getPassword() == null) {
-            user.setPassword("123456");
+            user.setPassword(Hash.encode("e10adc3949ba59abbe56e057f20f883e"));
         }
         user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
         userService.save(user);
@@ -131,10 +131,12 @@ public class AllUserController {
 
     @PutMapping("/updateDataDoctor") //医生更新信息
     public Result<?> updateDataDoctor(@RequestBody OneInfo oneInfo) {
+        oneInfo.doctor();
         Doctor res = doctorMapper.selectOne(Wrappers.<Doctor>query().lambda().eq(Doctor::getDoctorId, oneInfo.getId()));
         res.setDoctorAge(oneInfo.getAge());
         res.setDoctorName(oneInfo.getName());
         res.setDoctorPosition(oneInfo.getDoctorPosition());
+        res.setDoctorPic(oneInfo.getDoctorPic());
         doctorService.updateById(res);
         AllUser res1 = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
         res1.setName(oneInfo.getName());
