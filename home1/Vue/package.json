@@ -11,6 +11,7 @@
     "bootstrap": "^5.0.2",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
+    "crypto": "^1.0.1",
     "echarts": "^5.1.2",
     "element-plus": "^1.0.2-beta.55",
     "js-md5": "^0.7.3",
