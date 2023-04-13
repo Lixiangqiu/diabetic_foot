@@ -10,6 +10,7 @@ import cn.edu.cqu.boot.mapper.PatientMapper;
 import cn.edu.cqu.boot.service.IAllUserService;
 import cn.edu.cqu.boot.service.IDoctorService;
 import cn.edu.cqu.boot.service.IPatientService;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -49,7 +50,14 @@ public class AllUserController {
     private static final File file = new File("E:/pycharm/code/t1/detector.py");
     private static final String PATH = file.getPath();
 
-    @PostMapping(value = "/showOneInfo")//展示个人信息
+    /**
+     * @return cn.edu.cqu.boot.config.Result<?>
+     * @Description 个人信息展示
+     * @Param [user]
+     * @Date 2023/4/12 15:32
+     * @Auther WangSanmu
+     */
+    @PostMapping(value = "/showOneInfo")
     public Result<?> showOneInfo(@RequestBody AllUser user) {
 //        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userid));
         System.err.println("paraR");
@@ -57,7 +65,8 @@ public class AllUserController {
         if (user.getRole() == 2) {//展示医生个人信息
             oneInfo = allUserMapper.selectJoinOne(OneInfo.class,
                     new MPJLambdaWrapper<AllUser>()
-                            .selectAll(AllUser.class)
+                            .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                            .select(AllUser::getId)
                             .select(Doctor::getDoctorPosition, Doctor::getDoctorDes)
                             .leftJoin(Doctor.class, Doctor::getDoctorId, AllUser::getId)
                             .eq(AllUser::getId, user.getId()));
@@ -65,7 +74,8 @@ public class AllUserController {
         } else if (user.getRole() == 3) {//展示病人个人信息
             oneInfo = allUserMapper.selectJoinOne(OneInfo.class,
                     new MPJLambdaWrapper<AllUser>()
-                            .selectAll(AllUser.class)
+                            .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                            .select(AllUser::getId)
                             .select(Patient::getPatientAddress, Patient::getPatientPhone)
                             .leftJoin(Patient.class, Patient::getPatientId, AllUser::getId)
                             .eq(AllUser::getId, user.getId()));
@@ -81,6 +91,7 @@ public class AllUserController {
             user.setPassword(Hash.encode("e10adc3949ba59abbe56e057f20f883e"));
         }
         user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
+        user.setPassword(Hash.encode(user.getPassword()));
         userService.save(user);
         System.err.println(user.getId());
         if (user.getRole() == 2) {  //同步更新医生表
@@ -95,6 +106,40 @@ public class AllUserController {
             p.setPatientId(user.getId());
             p.setPatientName(user.getName());
             patientService.save(p);
+        }
+        System.err.println(user);
+        return Result.success();
+    }
+
+    @PostMapping("/createDoctorData")   //管理员新增用户保存
+    public Result<?> createDoctorData(@RequestBody OneInfo info) throws Exception {
+        AllUser user = new AllUser();
+        if (info.getPassword() == null) {
+            user.setPassword(Hash.encode("e10adc3949ba59abbe56e057f20f883e"));
+        } else {
+            user.setPassword(Hash.encode(info.getPassword()));
+        }
+        user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
+        user.setName(info.getDoctorName());
+        user.setGender(info.getDoctorGender());
+        user.setAge(info.getDoctorAge());
+        user.setEmail(info.getDoctorEmail());
+        user.setRole(info.getRole());
+//        user.setPassword(Hash.encode(info.getPassword()));
+        userService.save(user);
+        System.err.println(user.getId());
+        if (user.getRole() == 2) {  //同步更新医生表
+            Doctor d = new Doctor();
+            d.setDoctorId(user.getId());
+//            d.setRole(user.getRole());
+            //System.err.println(d.getDoctorId());
+            d.setDoctorName(user.getName());
+            d.setDoctorPic(info.getDoctorPic());
+            d.setDoctorPosition(info.getDoctorPosition());
+            d.setDoctorAge(user.getAge());
+            d.setDoctorEmail(user.getEmail());
+            d.setDoctorGender(user.getGender());
+            doctorService.save(d);
         }
         System.err.println(user);
         return Result.success();
@@ -132,20 +177,27 @@ public class AllUserController {
     @PutMapping("/updateDataDoctor") //医生更新信息
     public Result<?> updateDataDoctor(@RequestBody OneInfo oneInfo) {
         oneInfo.doctor();
-        Doctor res = doctorMapper.selectOne(Wrappers.<Doctor>query().lambda().eq(Doctor::getDoctorId, oneInfo.getId()));
-        res.setDoctorAge(oneInfo.getAge());
-        res.setDoctorName(oneInfo.getName());
-        res.setDoctorPosition(oneInfo.getDoctorPosition());
-        res.setDoctorPic(oneInfo.getDoctorPic());
-        doctorService.updateById(res);
-        AllUser res1 = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
-        res1.setName(oneInfo.getName());
-        res1.setAge(oneInfo.getAge());
-        res1.setPhoto(oneInfo.getPhoto());
-        res1.setPassword(oneInfo.getPassword());
-        res1.setEmail(oneInfo.getEmail());
-        res1.setGender(oneInfo.getGender());
-        userService.updateById(res1);
+        AllUser res_user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
+        res_user.setName(oneInfo.getName());
+        res_user.setEmail(oneInfo.getEmail());
+        res_user.setAge(oneInfo.getAge());
+        res_user.setGender(oneInfo.getGender());
+//        res_user.setPhoto(oneInfo.getPhoto());
+        Doctor res_doctor = doctorMapper.selectOne(Wrappers.<Doctor>query().lambda().eq(Doctor::getDoctorId, oneInfo.getId()));
+        res_doctor.setDoctorAge(oneInfo.getAge());
+        res_doctor.setDoctorName(oneInfo.getName());
+        res_doctor.setDoctorPosition(oneInfo.getDoctorPosition());
+        res_doctor.setDoctorPic(oneInfo.getDoctorPic());
+        userService.updateById(res_user);
+        doctorService.updateById(res_doctor);
+//        AllUser res1 = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
+//        res1.setName(oneInfo.getName());
+//        res1.setAge(oneInfo.getAge());
+//        res1.setPhoto(oneInfo.getPhoto());
+//        res1.setPassword(oneInfo.getPassword());
+//        res1.setEmail(oneInfo.getEmail());
+//        res1.setGender(oneInfo.getGender());
+//        userService.updateById(res1);
         return Result.success();
     }
 
@@ -199,10 +251,11 @@ public class AllUserController {
                                @RequestParam(defaultValue = "5") Integer pageSize,
                                @RequestParam(defaultValue = "") String search) {
 //        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "2").like(AllUser::getName, search));
-//        IPage<Patient> patientIPage = allUserMapper.
 //        Doctor doctor = doctorMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
 //                eq(AllUser::getPassword, Hash.encode(user.getPassword())));
-        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize),
+                Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+//        IPage<OneInfo> oneInfoIPage =
         System.out.println(doctorIPage);
         return Result.success(doctorIPage);
     }
@@ -258,12 +311,13 @@ public class AllUserController {
     }
 
     @PostMapping("/login")  //用户登录页
-    public Result<?> login(@RequestBody AllUser user) throws IOException, InterruptedException, Exception {
+    public Result<?> login(@RequestBody AllUser user) throws Exception {
         AllUser res = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
                 eq(AllUser::getPassword, Hash.encode(user.getPassword())));
         if (res == null) {
             return Result.error(-1, "用户名或密码错误");
         }
+        res.setPassword(null);
 //        System.out.println(res);
 //        System.err.println("正在进行人脸检测...");
 //
@@ -300,8 +354,8 @@ public class AllUserController {
         Patient p = new Patient();
         p.setPatientId(user.getId());
         p.setPatientName(user.getName());
+        p.setPatientEmail(user.getEmail());
         patientService.save(p);
-
         return Result.success();
     }
 

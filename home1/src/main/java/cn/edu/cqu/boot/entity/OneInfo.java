@@ -4,12 +4,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
+import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ToString
-public class OneInfo {
+public class OneInfo extends AllUser implements Serializable{
     private static final long serialVersionUID = 1L;
 
 
@@ -21,6 +21,7 @@ public class OneInfo {
     private String email;
     private Integer role;
     private String photo;
+
 
     private Integer doctorId;
     private String doctorName;
@@ -40,7 +41,7 @@ public class OneInfo {
         this.gender = this.doctorGender;
         this.email = this.doctorEmail;
         this.name = this.doctorName;
-//        this.photo = this.doctorPic;
+        this.photo = this.doctorPic;
     }
 
 }
