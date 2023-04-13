@@ -102,13 +102,26 @@ export default {
   },
 
   created() {
-    let str = sessionStorage.getItem("patient") || "{}"
-    this.form = JSON.parse(str)
-    this.loadCp()
-    this.init()
+    this.load()
   },
 
   methods: {
+    load(){
+      request.get("/api/doctor/showCaseByDoctorIdPatientName",{
+        params:{
+          doctorId:this.$route.query.doctorId,
+          patientName:this.$route.query.patientName,
+        }
+      }).then(res =>{
+        this.form = res.data.records[0]
+        console.log('病历信息',this.form)
+        if(this.form.caseDesc === null || item.caseDesc === ""){
+          this.form.caseDesc == '暂无诊断报告'
+        }
+        this.loadCp()
+        this.init()
+      })
+    },
     draw() {
       let chartDom = document.getElementById('main');
       let myChart = echarts.init(chartDom);
