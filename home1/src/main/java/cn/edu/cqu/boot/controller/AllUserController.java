@@ -383,7 +383,7 @@ public class AllUserController {
         assert user != null;
         if (Objects.equals(Hash.encode(passwordModify.getOldPassword()), user.getPassword())) {
             user.setPassword(Hash.encode(passwordModify.getNewPassword()));
-            userService.save(user);
+            userService.updateById(user);
             return Result.success();
         } else {
             return Result.error(-1, "旧密码错误！");
