@@ -78,20 +78,20 @@
       </div>
 
       <el-dialog title="更新信息" v-model="dialogVisible" width="30%">
-        <el-form :model="form" label-width="120px">
+        <el-form :model="form" label-width="120px" :rules="rules">
           <el-form-item label="名称">
             <el-input v-model="form.doctorName" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="性别">
+          <el-form-item label="性别" prop="doctorGender">
             <el-input v-model="form.doctorGender" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="年龄">
+          <el-form-item label="年龄" prop="doctorAge">
             <el-input v-model="form.doctorAge" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱">
+          <el-form-item label="邮箱" prop="doctorEmail">
             <el-input v-model="form.doctorEmail" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="职位">
+          <el-form-item label="职位" prop="doctorPosition">
             <el-input v-model="form.doctorPosition" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="权限">
