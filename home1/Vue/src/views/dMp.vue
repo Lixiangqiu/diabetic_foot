@@ -51,7 +51,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[3, 6, 9]"
+            :page-sizes="[9, 6, 3]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -75,7 +75,7 @@ export default {
       form:{},
       search:'',
       currentPage:1,
-      pageSize:3,
+      pageSize:9,
       total:0,
       tableData: [
         {
@@ -99,8 +99,14 @@ export default {
 
   methods:{
     handleEdit(row){
-      sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
-      this.$router.push("/seePatientCp")
+      // sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
+      this.$router.push({
+                    path: "/seePatientCp",
+                    query: {
+                      doctorId: this.user.id,
+                      patientName:row.patientName
+                    }
+                })
     },
 
     handleSizeChange(pageSize){
@@ -122,7 +128,6 @@ export default {
           patientName:this.search
         }
       }).then(res =>{
-        console.log(res)
         this.tableData = res.data.records
         this.tableData.forEach(item =>{
           if(item.caseDesc === null || item.caseDesc === ""){

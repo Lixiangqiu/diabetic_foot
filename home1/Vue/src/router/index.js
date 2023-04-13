@@ -108,6 +108,11 @@ const routes = [
             path: 'seePatientCp',
             name: 'seePatientCp',
             component: () => import('@/views/seePatientCp')
+        },
+        {
+          path: 'passwordModify',
+          name: 'passwordModify',
+          component: () => import('@/views/passwordModify')
         }
     ]
   },

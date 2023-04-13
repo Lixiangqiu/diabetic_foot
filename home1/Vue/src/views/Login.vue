@@ -107,8 +107,9 @@ export default {
       }
       this.$refs['form1'].validate((valid) => {
         if (valid) {
-          this.form1.password = md5(this.form1.password)
-          request.post("/api/allUser/register",this.form1).then(res=>{
+          let regForm = JSON.parse(JSON.stringify(this.form1))
+          regForm.password = md5(regForm.password)
+          request.post("/api/allUser/register",regForm).then(res=>{
             if(res.code === 0){
               this.$message({
                 type:"success",
@@ -122,7 +123,6 @@ export default {
                 type:"error",
                 message:res.msg,
               })
-              this.form2.password = ''
             }
           })
         }
@@ -131,9 +131,9 @@ export default {
     login(){
       this.$refs['form2'].validate((valid) => {
         if (valid) {
-          this.form2.password = md5(this.form2.password)
-          console.log('md5',this.form2.password)
-          request.post("/api/allUser/login",this.form2).then(res=>{
+          let loginForm = JSON.parse(JSON.stringify(this.form2))
+          loginForm.password = md5(loginForm.password)
+          request.post("/api/allUser/login",loginForm).then(res=>{
             if(res.code === 0){
               this.$message({
                 type:"success",
@@ -155,7 +155,6 @@ export default {
                 type:"error",
                 message:res.msg
               })
-              this.form2.password = ''
             }
           })
         }
