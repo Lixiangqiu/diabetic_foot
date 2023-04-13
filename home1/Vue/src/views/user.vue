@@ -162,7 +162,9 @@ export default {
             this.$message({
               type:"success",
               message:"修改成功"
-            })}else{
+            })
+            location.reload()
+          }else{
             this.$message({
               type:"error",
               message:res.msg
@@ -176,7 +178,9 @@ export default {
             this.$message({
               type:"success",
               message:"添加成功"
-            })}else{
+            })
+            location.reload()
+          }else{
             this.$message({
               type:"error",
               message:res.msg
@@ -186,7 +190,7 @@ export default {
       }
       this.dialogVisible = false
       this.load()
-      location.reload()
+      
     },
 
     handleEdit(row){
@@ -202,14 +206,14 @@ export default {
           this.$message({
             type:"success",
             message:"删除成功"
-            
-          })}else{
+          })
+          location.reload()
+        }else{
           this.$message({
             type:"error",
             message:res.msg
           })
         }
-        location.reload()
       })
       this.load()
     },

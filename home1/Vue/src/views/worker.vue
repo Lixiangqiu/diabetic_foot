@@ -53,7 +53,7 @@
                 cancelButtonText='不用了'
                 icon="el-icon-info"
                 iconColor="red"
-                title="这是一段内容确定删除吗？" @confirm="handleDelete(scope.row.id)"
+                title="这是一段内容确定删除吗？" @confirm="handleDelete(scope.row.doctorId)"
             >
               <template #reference>
                 <el-button type="danger" icon="el-icon-delete" circle size="small"></el-button>
@@ -96,12 +96,12 @@
           </el-form-item>
           <el-form-item label="权限">
             <el-input v-model="form.role" disabled=true style="width:80%" placeholder="2"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="图片">
+          </el-form-item> 
+           <el-form-item label="图片">
             <el-upload ref='upload' class="upload-demo" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
               <el-button type="primary">点击上传</el-button>
             </el-upload>
-          </el-form-item> -->
+          </el-form-item>
           <span class="dialog-footer" style="margin-left: 30px ;display: flex;justify-content: space-around;align-items: center">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="saveData">确 定</el-button>
@@ -133,13 +133,13 @@ export default {
       tableData: [],
       user:{},
       rules: {
-        gender: [
+        doctorGender: [
           { required: true, message: '请正确输入性别', type: "enum", enum: ['男', '女'],trigger: 'blur' },
         ],
-        age: [
+        doctorAge: [
           { required: true, message: '请正确输入年龄', pattern : /^([1-9]|[1-9][0-9]|[1][0-9][0-9])$/g, type : "string", trigger: 'blur' },
         ],
-        email: [
+        doctorEmail: [
           { required: true, message: '请正确输入邮箱', type: 'email', trigger: 'blur' },
         ],
         role: [
@@ -165,37 +165,45 @@ export default {
 
     saveData(){
       if(this.form.doctorId){
+        console.log('yes')
         request.put("/api/allUser/updateDataDoctor",this.form).then(res =>{
           console.log(res)
           if(res.code === 0){
             this.$message({
               type:"success",
               message:"修改成功"
-            })}else{
+            })
+            this.dialogVisible = false
+            location.reload()
+          }else{
+            console.log('修改失败')
             this.$message({
               type:"error",
-              message:res.msg
+              message:"修改失败"
             })
-          }
-          location.reload()
+          } 
+          
+          
         })
       }else {
+        
         request.post("/api/allUser/saveData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
             this.$message({
               type:"success",
               message:"添加成功"
-            })}else{
+            })
+            location.reload()
+          }else{
             this.$message({
               type:"error",
-              message:res.msg
+              message:"添加失败"
             })
           }
-          location.reload()
         })
       }
-      this.dialogVisible = false
+
       this.load()
     },
 
@@ -212,13 +220,14 @@ export default {
           this.$message({
             type:"success",
             message:"删除成功"
-          })}else{
+          })
+          location.reload()
+        }else{
           this.$message({
             type:"error",
             message:res.msg
           })
         }
-      location.reload()
       })
       
       this.load()

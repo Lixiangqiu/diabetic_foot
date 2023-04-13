@@ -144,29 +144,35 @@ export default {
 
     saveData(){
       if(this.form.id){
-        this.form.password = md5(this.form.password)
-        request.put("/api/allUser/updateData",this.form).then(res =>{
-          console.log(res)
+        let managerForm = JSON.parse(JSON.stringify(this.form))
+        managerForm.password = md5(managerForm.password)
+        request.put("/api/allUser/updateData",managerForm).then(res =>{
           if(res.code === 0){
             this.$message({
               type:"success",
               message:"修改成功"
-            })}else{
+            })
+            location.reload()
+          }else{
             this.$message({
               type:"error",
               message:res.msg
             })
           }
+          
         })
       }else {
-        this.form.password = md5(this.form.password)
-        request.post("/api/allUser/saveData", this.form).then(res => {
+        let managerForm = JSON.parse(JSON.stringify(this.form))
+        managerForm.password = md5(managerForm.password)
+        request.post("/api/allUser/saveData", managerForm).then(res => {
           console.log(res)
           if(res.code === 0){
             this.$message({
               type:"success",
               message:"添加成功"
-            })}else{
+            })
+            location.reload()
+          }else{
             this.$message({
               type:"error",
               message:res.msg
@@ -176,7 +182,6 @@ export default {
       }
       this.dialogVisible = false
       this.load()
-      location.reload()
     },
 
     handleEdit(row){
@@ -193,13 +198,14 @@ export default {
           this.$message({
             type:"success",
             message:"删除成功"
-          })}else{
+          })
+          location.reload()
+        }else{
           this.$message({
             type:"error",
             message:res.msg
           })
         }
-        location.reload()
       })
       this.load()
     },

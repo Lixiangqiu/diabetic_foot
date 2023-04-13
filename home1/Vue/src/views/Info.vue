@@ -159,6 +159,9 @@
               <el-button type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
+          <el-form-item label="密码">
+            <el-button type="primary" @click="$router.push('/passwordModify')">点击修改</el-button>
+          </el-form-item>
         </el-form>
         <template #footer>
             <span class="dialog-footer">
