@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString
 public class PasswordModify {
+    private String id;
     private String oldPassword;
     private String newPassword;
-    private String rePassword;
 }

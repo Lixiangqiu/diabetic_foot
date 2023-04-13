@@ -361,20 +361,32 @@ public class AllUserController {
         return Result.success();
     }
 
+    //    @PostMapping("/passwordModify")
+//    public Result<?> passwordModify(HttpServletRequest request, @RequestBody PasswordModify passwordModify) throws Exception {
+//        String userId = (String) request.getSession().getAttribute("id");
+//        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userId));
+//        assert user != null;
+//        if (Objects.equals(passwordModify.getOldPassword(), user.getPassword())) {
+//            if (Objects.equals(passwordModify.getRePassword(), passwordModify.getNewPassword())) {
+//                user.setPassword(passwordModify.getNewPassword());
+//                userService.save(user);
+//                return Result.success();
+//            }
+//        } else {
+//            return Result.error(-1,"旧密码错误！");
+//        }
+//        return Result.success();
+//    }
     @PostMapping("/passwordModify")
-    public Result<?> passwordModify(HttpServletRequest request, @RequestBody PasswordModify passwordModify) throws Exception {
-        String userId = (String) request.getSession().getAttribute("id");
-        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userId));
+    public Result<?> passwordModify(@RequestBody PasswordModify passwordModify) throws Exception {
+        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, passwordModify.getId()));
         assert user != null;
-        if (Objects.equals(passwordModify.getOldPassword(), user.getPassword())) {
-            if (Objects.equals(passwordModify.getRePassword(), passwordModify.getNewPassword())) {
-                user.setPassword(passwordModify.getNewPassword());
-                userService.save(user);
-                return Result.success();
-            }
+        if (Objects.equals(Hash.encode(passwordModify.getOldPassword()), user.getPassword())) {
+            user.setPassword(Hash.encode(passwordModify.getNewPassword()));
+            userService.save(user);
+            return Result.success();
         } else {
-            return Result.error(-1,"旧密码错误！");
+            return Result.error(-1, "旧密码错误！");
         }
-        return Result.success();
     }
 }
