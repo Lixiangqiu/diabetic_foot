@@ -186,8 +186,8 @@ export default {
           
         })
       }else {
-        
-        request.post("/api/allUser/saveData", this.form).then(res => {
+        console.log('数据',this.form)
+        request.post("/api/allUser/createDoctorData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
             this.$message({

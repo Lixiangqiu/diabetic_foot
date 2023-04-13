@@ -1,0 +1,9 @@
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="cn.edu.cqu.boot.mapper.DoctorInfoMapper">-->
+<!--    <select id="getDoctorPageList" resultType="cn.edu.cqu.boot.entity.OneInfo" >-->
+<!--        select alluser.*, doctor.doctorPosition, doctor.doctorPic, doctor.doctorDes-->
+<!--        from alluser left join doctor on alluser.id=doctor.id where-->
+<!--    </select>-->
+<!--</mapper>-->

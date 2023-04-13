@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace=" cn.edu.cqu.boot.mapper.CpMapper">
+<mapper namespace="cn.edu.cqu.boot.mapper.CpMapper">
     <select id="searchAll" resultType="cn.edu.cqu.boot.entity.Cp">
         select * from cp
     </select>
