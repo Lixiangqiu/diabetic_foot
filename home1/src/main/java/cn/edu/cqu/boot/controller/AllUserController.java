@@ -19,10 +19,12 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/allUser")
@@ -359,5 +361,20 @@ public class AllUserController {
         return Result.success();
     }
 
-
+    @PostMapping("/passwordModify")
+    public Result<?> passwordModify(HttpServletRequest request, @RequestBody PasswordModify passwordModify) throws Exception {
+        String userId = (String) request.getSession().getAttribute("id");
+        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userId));
+        assert user != null;
+        if (Objects.equals(passwordModify.getOldPassword(), user.getPassword())) {
+            if (Objects.equals(passwordModify.getRePassword(), passwordModify.getNewPassword())) {
+                user.setPassword(passwordModify.getNewPassword());
+                userService.save(user);
+                return Result.success();
+            }
+        } else {
+            return Result.error(-1,"旧密码错误！");
+        }
+        return Result.success();
+    }
 }
