@@ -163,7 +163,9 @@ export default {
               type:"success",
               message:"修改成功"
             })
-            location.reload()
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             this.$message({
               type:"error",
@@ -179,7 +181,9 @@ export default {
               type:"success",
               message:"添加成功"
             })
-            location.reload()
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             this.$message({
               type:"error",
@@ -207,7 +211,9 @@ export default {
             type:"success",
             message:"删除成功"
           })
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 200)
         }else{
           this.$message({
             type:"error",

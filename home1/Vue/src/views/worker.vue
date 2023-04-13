@@ -174,7 +174,9 @@ export default {
               message:"修改成功"
             })
             this.dialogVisible = false
-            location.reload()
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             console.log('修改失败')
             this.$message({
@@ -186,7 +188,6 @@ export default {
           
         })
       }else {
-        console.log('数据',this.form)
         request.post("/api/allUser/createDoctorData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
@@ -194,7 +195,10 @@ export default {
               type:"success",
               message:"添加成功"
             })
-            location.reload()
+            this.dialogVisible = false
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             this.$message({
               type:"error",
@@ -221,7 +225,9 @@ export default {
             type:"success",
             message:"删除成功"
           })
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 200)
         }else{
           this.$message({
             type:"error",
@@ -229,7 +235,6 @@ export default {
           })
         }
       })
-      
       this.load()
     },
 
