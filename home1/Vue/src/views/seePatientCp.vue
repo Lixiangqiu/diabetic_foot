@@ -98,15 +98,22 @@ export default {
       serie1:[],
       ava:'',
       max:'',
+      user:'',
     }
   },
 
   created() {
+    this.user = JSON.parse(sessionStorage.getItem('user'))||{}
     this.load()
   },
 
   methods: {
     load(){
+      if(this.$route.query.doctorId == undefined ||
+       this.$route.query.patientName == undefined ||
+        this.$route.query.doctorId != this.user.id){
+        this.$router.push('/dMp')
+      }
       request.get("/api/doctor/showCaseByDoctorIdPatientName",{
         params:{
           doctorId:this.$route.query.doctorId,

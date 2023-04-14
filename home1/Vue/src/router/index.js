@@ -15,7 +15,7 @@ const routes = [
           component: () => import('@/views/manager'),
           meta: {
             title: '管理员界面',
-            url: '@/views/manager',
+            url: '/manager',
             requiresManage: true 
           },
        },
@@ -25,7 +25,7 @@ const routes = [
           component: () => import('@/views/user'),
           meta: {
             title: '用户管理界面',
-            url: '@/views/user',
+            url: '/user',
             requiresManage: true 
           },
         },
@@ -35,28 +35,42 @@ const routes = [
           component: () => import('@/views/worker'),
           meta: {
             title: '医生管理界面',
-            url: '@/views/worker',
+            url: '/worker',
             requiresManage: true 
           },
         },
 
         //用户界面
         {
-            path: 'Info',
-            name: 'Info',
-            component: () => import('@/views/Info')
+          path:'detailedMedicalRecord',
+          name:'DetailedMedicalRecord',
+          component: () => import('@/views/detailedMedicalRecord'),
+          meta: {
+            title: '个人详细病历',
+            url: '/detailedMedicalRecord',
+            requiresPatient: true 
+          },
         },
         {
-          path: 'commentList',
-          name: 'CommentList',
-          component: () => import('@/views/commentList')
+          path: 'doctorInfo',
+          name: 'DoctorInfo',
+          component: () => import('@/views/doctorInfo'),
+          meta: {
+            title: '医生列表',
+            url: '/doctorInfo',
+            requiresPatient: true 
+          },
         },
         {
-            path: 'tiezi',
-            name: 'Tiezi',
-            component: () => import('@/views/tiezi')
+          path: 'seeDoctorInfo',
+          name: 'seeDoctorInfo',
+          component: () => import('@/views/seeDoctorInfo'),
+          meta: {
+            title: '医生详情',
+            url: '/seeDoctorInfo',
+            requiresPatient: true 
+          },
         },
-
         //医生界面
         {
             path: 'dMp',
@@ -64,7 +78,7 @@ const routes = [
             component: () => import('@/views/dMp'),
             meta: {
               title: '个人病历',
-              url: '@/views/dMp',
+              url: '/dMp',
               requiresDoctor: true 
             },
         },
@@ -74,7 +88,7 @@ const routes = [
           component: () => import('@/views/dMpOther'),
           meta: {
             title: '病历界面',
-            url: '@/views/dMpOther',
+            url: '/dMpOther',
             requiresDoctor: true 
           },
       },
@@ -90,16 +104,6 @@ const routes = [
             component: () => import("@/views/questionInfo"),
         },
         {
-            path: 'doctorInfo',
-            name: 'DoctorInfo',
-            component: () => import('@/views/doctorInfo')
-        },
-        {
-            path: 'seeDoctorInfo',
-            name: 'seeDoctorInfo',
-            component: () => import('@/views/seeDoctorInfo')
-        },
-        {
             path: 'question',
             name: 'question',
             component: () => import('@/views/question')
@@ -107,13 +111,33 @@ const routes = [
         {
             path: 'seePatientCp',
             name: 'seePatientCp',
-            component: () => import('@/views/seePatientCp')
+            component: () => import('@/views/seePatientCp'),
+            meta: {
+              title: '病人病历',
+              url: '/seePatientCp',
+              requiresDoctor: true 
+            },
         },
         {
           path: 'passwordModify',
           name: 'passwordModify',
           component: () => import('@/views/passwordModify')
-        }
+        },
+        {
+          path: 'commentList',
+          name: 'CommentList',
+          component: () => import('@/views/commentList')
+        },
+        {
+          path: 'tiezi',
+          name: 'Tiezi',
+          component: () => import('@/views/tiezi')
+      },
+      {
+        path: 'Info',
+        name: 'Info',
+        component: () => import('@/views/Info')
+    },
     ]
   },
 
