@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 11/04/2023 16:30:07
+ Date: 14/04/2023 16:42:55
 */
 
 SET NAMES utf8mb4;
@@ -31,27 +31,26 @@ CREATE TABLE `alluser`  (
   `role` int(0) NULL DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of alluser
 -- ----------------------------
-INSERT INTO `alluser` VALUES (1, 'admin', '71034feee546b5c145ecc1ea2c9696e90b0a9beba7ee67938923b3849f4918f6', '男', '28', '2077@qq.com', 1, 'http://localhost:8887/files/7e4e6b7f5763477f9dda789a5c200a88');
-INSERT INTO `alluser` VALUES (2, 'admin2', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '35', '8680432785@qq.com', 1, 'http://localhost:8887/files/015e79bfcec94667b798ebd4b7acd270');
-INSERT INTO `alluser` VALUES (3, '王洛阳', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '45', '973321919@hos.com', 2, 'http://localhost:8887/files/86307287ab314551be9e790b223d140e');
-INSERT INTO `alluser` VALUES (26, 'admin3', '12346', '女', '20', '666432785@qq.com', 1, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (34, '黄沙', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '56', '288885676@hos.com', 2, 'http://localhost:8887/files/fba5339bcd0b4e8e9bc3e4bf57326fbb');
-INSERT INTO `alluser` VALUES (36, '罗艳', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '女', '35', '589995812@hos.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (39, '李军', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '52', '125225@163.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (40, '李莉', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '女', '25', '2022255@google.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (41, '张三', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '35', '30222@qq.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (42, '马婷', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '女', '23', '207734192@qq.com', 3, 'http://localhost:8887/files/eeaf4dfc0bf743e182625cbaf79b0fe3');
-INSERT INTO `alluser` VALUES (43, '西喜爱', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '女', '44', '101234@163.cn', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (45, '1', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '24', '307725956@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (48, '白衣天使', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '女', '25', NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (49, '徐煜阳', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', '男', '30', '160524888@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (55, 'san', '71034feee546b5c145ecc1ea2c9696e90b0a9beba7ee67938923b3849f4918f6', NULL, NULL, NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (56, 'san1', 'b8ad08a3a547e35829b821b75370301dd8c4b06bdd7771f9b541a75914068718', NULL, NULL, NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (1, 'admin', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '28', '2077@qq.com', 1, 'http://localhost:8887/files/7e4e6b7f5763477f9dda789a5c200a88');
+INSERT INTO `alluser` VALUES (2, 'admin2', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '35', '8680432785@qq.com', 1, 'http://localhost:8887/files/015e79bfcec94667b798ebd4b7acd270');
+INSERT INTO `alluser` VALUES (3, '王洛阳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '453', '973321919@hos.com', 2, 'http://localhost:8887/files/ecd9475077514ae18c9a4c3b326e3fea');
+INSERT INTO `alluser` VALUES (26, 'admin3', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '20', '666432785@qq.com', 1, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (34, '黄沙1', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '563', '288885676@hos.com', 2, 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d');
+INSERT INTO `alluser` VALUES (36, '罗艳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '35', '589995812@hos.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (39, '李军', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '52', '125225@163.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (40, '李莉', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '25', '2022255@google.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (41, '张三', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '35', '30222@qq.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (42, '马婷', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '23', '207734192@qq.com', 3, 'http://localhost:8887/files/76a4c2ae81a64906a30424103bebccb3');
+INSERT INTO `alluser` VALUES (43, '西喜爱', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '44', '101234@163.cn', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (45, '1', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '24', '307725956@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (48, '白衣天使', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '25', NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (49, '徐煜阳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '30', '160524888@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (57, 'san', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', NULL, NULL, NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 
 -- ----------------------------
 -- Table structure for comment
@@ -70,7 +69,7 @@ CREATE TABLE `comment`  (
   `commentPic` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   `commentContent` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL,
   PRIMARY KEY (`commentId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of comment
@@ -108,7 +107,7 @@ CREATE TABLE `cp`  (
   `paraRHL` float NULL DEFAULT NULL,
   `paraRHM` float NULL DEFAULT NULL,
   PRIMARY KEY (`cpId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cp
@@ -123,16 +122,21 @@ INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 1, 2, 5, 4, 5, 6, 5, 3, '有所
 -- ----------------------------
 DROP TABLE IF EXISTS `dc`;
 CREATE TABLE `dc`  (
-  `dcid` int(0) NOT NULL,
-  `cpid` int(0) NOT NULL,
-  `doctorid` int(0) NOT NULL,
-  `caseDesc` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`dcid`) USING BTREE
+  `dcId` int(0) NOT NULL,
+  `dcDate` date NOT NULL,
+  `cpId` int(0) NOT NULL,
+  `doctorId` int(0) NOT NULL,
+  `doctorCon` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`dcId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dc
 -- ----------------------------
+INSERT INTO `dc` VALUES (1, '2023-04-11', 2, 3, NULL);
+INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 3, NULL);
+INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 3, NULL);
+INSERT INTO `dc` VALUES (4, '2023-04-14', 5, 3, NULL);
 
 -- ----------------------------
 -- Table structure for doctor
@@ -153,8 +157,8 @@ CREATE TABLE `doctor`  (
 -- ----------------------------
 -- Records of doctor
 -- ----------------------------
-INSERT INTO `doctor` VALUES (3, '王洛阳', 45, '主治医师', '常年好评', 'http://localhost:8887/files/ecd9475077514ae18c9a4c3b326e3fea', '男', '973321919@hos.com');
-INSERT INTO `doctor` VALUES (34, '黄沙', 56, '主治医生', '医学水平高', 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d', '男', '288885676@hos.com');
+INSERT INTO `doctor` VALUES (3, '王洛阳', 453, '主治医', '常年好评', 'http://localhost:8887/files/ecd9475077514ae18c9a4c3b326e3fea', '男', '973321919@hos.com');
+INSERT INTO `doctor` VALUES (34, '黄沙1', 563, '主治医生', '医学水平高', 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d', '男', '288885676@hos.com');
 INSERT INTO `doctor` VALUES (36, '罗艳', 35, '主治医生', '经验丰富', 'http://localhost:8887/files/eddbc50828354a96b325f117942c1057', '女', '589995812@hos.com');
 INSERT INTO `doctor` VALUES (39, '李军', 52, '副院长', '临床经验丰富', 'http://localhost:8887/files/f36ea7ba1aba454892f735e9a697884e', '男', '125225@163.com');
 INSERT INTO `doctor` VALUES (40, '李莉', 25, NULL, NULL, NULL, '女', '2022255@google.com');
@@ -210,12 +214,6 @@ INSERT INTO `patient` VALUES (45, '王五', '男', 24, NULL, NULL, '307725956@qq
 INSERT INTO `patient` VALUES (48, '白衣天使', '女', 25, NULL, NULL, NULL);
 INSERT INTO `patient` VALUES (49, '徐煜阳', '男', 30, NULL, NULL, '160524888@qq.com');
 INSERT INTO `patient` VALUES (50, 'san', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (51, 'san1', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (52, 'san2', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (53, 'san3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (54, 'sansec', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (55, 'san', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `patient` VALUES (56, 'san1', NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for problem
