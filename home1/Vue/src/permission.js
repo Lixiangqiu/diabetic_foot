@@ -35,6 +35,16 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
+  }else if (to.matched.some(record => record.meta.requiresPatient)){
+    if (user.role !== 3) {  // 病人没登录
+      setTimeout(() => {
+        next({
+          path: '/login',
+        })
+      }, 2000);
+    } else {
+      next();
+    }
   }
   // else if (to.matched.some(record => record.meta.requiresUser)) {
   //   if (!token || manage == 'true') {  // 用户没登录

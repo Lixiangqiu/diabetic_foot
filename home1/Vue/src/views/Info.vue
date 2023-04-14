@@ -129,7 +129,17 @@
         <h2>就诊记录</h2>
         <el-collapse  v-model="activeNames" accordion>
           <el-collapse-item :title="cp.date" v-for="cp in cpList" :key="cp.cpId" :name="cp.cpId">
-            <div>诊断报告 <span>{{cp.caseDesc}}</span></div>
+            <div>
+              诊断报告 <span>{{cp.caseDesc}}</span>
+              <span class="jumpToMedicalRecord" @click="jumpToMedicalRecord(cp.doctorId)">查看详细病历></span>
+            </div>
+            <h2 style="margin-left:50px">医生建议</h2>
+            <div v-for="dc in dcList">
+              <hr>
+              &emsp;&emsp;&emsp;&emsp;<span>{{ dc.date }}</span>
+              &emsp;&emsp;&emsp;&emsp;<span>&nbsp;&nbsp;医生姓名: {{ dc.doctorName }}</span><br>
+              &emsp;&emsp;&emsp;&emsp;医生建议： <span>{{ dc.caseDesc }}</span>
+            </div>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -197,6 +207,35 @@ export default {
           cpId:2,
           date:2021,
           caseDesc:"456"
+        }
+      ],
+      dcList:[
+        {
+          dcid:1,
+          cpid:6,
+          doctorId:34,
+          doctorName:'黄沙',
+          doctorPosition:'主治医师',
+          caseDesc:'还需要进一步观察',
+          date:'2022-5-6'
+        },
+        {
+          dcid:1,
+          cpid:6,
+          doctorId:36,
+          doctorName:'罗艳',
+          doctorPosition:'主治医师',
+          caseDesc:'有恶化倾向',
+          date:'2022-5-7'
+        },
+        {
+          dcid:1,
+          cpid:6,
+          doctorId:38,
+          doctorName:'李军',
+          doctorPosition:'主治医师',
+          caseDesc:'建议住院观察',
+          date:'2022-5-8'
         }
       ],
       activeNames:1,
@@ -340,6 +379,16 @@ export default {
         this.cpList = res.data
       })
     },
+
+    jumpToMedicalRecord(doctorId){
+      this.$router.push({
+                    path: "/detailedMedicalRecord",
+                    query: {
+                      doctorId: doctorId,
+                      patientName:this.userData.name
+                    }
+                })
+    }
   }
 }
 </script>
@@ -364,4 +413,15 @@ export default {
 .margin-top {
   margin-top: 20px;
 }
+
+.jumpToMedicalRecord{
+    cursor:pointer;
+    position:relative;
+    right:50px;
+    float: right;
+    font-weight:bolder
+  }
+  .jumpToMedicalRecord:hover{
+    color:rgb(64,158,255);
+  }
 </style>
