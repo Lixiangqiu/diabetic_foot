@@ -92,11 +92,12 @@ public class CpController {
     @GetMapping(value = "/cpByPatientId1")
     public Result<?> searchByPatientId1(@RequestParam Integer id) {
         List<Cp> cpList = cpMapper.selectList(
-                Wrappers.<Cp>query()
-                        .lambda()
+                new MPJLambdaWrapper<Cp>()
+                        .selectAll(Cp.class)
+                        .select(Doctor::getDoctorName, Doctor::getDoctorPosition)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId, Cp::getDoctorId)
                         .eq(Cp::getPatientId, id)
-                        .orderByDesc(Cp::getDate));
-
+        );
         System.out.println(cpList);
         return Result.success(cpList);
     }
