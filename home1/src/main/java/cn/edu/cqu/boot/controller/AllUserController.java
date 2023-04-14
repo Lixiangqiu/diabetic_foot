@@ -71,7 +71,8 @@ public class AllUserController {
                             .select(AllUser::getId)
                             .select(Doctor::getDoctorPosition, Doctor::getDoctorDes)
                             .leftJoin(Doctor.class, Doctor::getDoctorId, AllUser::getId)
-                            .eq(AllUser::getId, user.getId()));
+                            .eq(AllUser::getId, user.getId())
+            );
             return Result.success(oneInfo);
         } else if (user.getRole() == 3) {//展示病人个人信息
             oneInfo = allUserMapper.selectJoinOne(OneInfo.class,
@@ -80,7 +81,8 @@ public class AllUserController {
                             .select(AllUser::getId)
                             .select(Patient::getPatientAddress, Patient::getPatientPhone)
                             .leftJoin(Patient.class, Patient::getPatientId, AllUser::getId)
-                            .eq(AllUser::getId, user.getId()));
+                            .eq(AllUser::getId, user.getId())
+            );
             return Result.success(oneInfo);
         }
 
