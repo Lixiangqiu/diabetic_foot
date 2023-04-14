@@ -39,5 +39,5 @@ public class Dc implements Serializable {
     private String doctorPosition;
 
     @TableField("doctorCon")
-    private String caseDesc;
+    private String doctorCon;
 }
