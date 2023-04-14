@@ -115,7 +115,7 @@ export default {
       }).then(res =>{
         this.form = res.data.records[0]
         console.log('病历信息',this.form)
-        if(this.form.caseDesc === null || item.caseDesc === ""){
+        if(this.form.caseDesc === null || this.form.caseDesc === ""){
           this.form.caseDesc == '暂无诊断报告'
         }
         this.loadCp()

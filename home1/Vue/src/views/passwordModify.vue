@@ -24,7 +24,8 @@
   </template>
   
   <script>
-      import md5 from 'js-md5'
+      import md5 from 'js-md5';
+      import request from "@/utils/request";
       export default {
           name: "passwordModify",
           data() {
@@ -32,7 +33,7 @@
                   if (value === '') {
                       callback(new Error('请输入密码'));
                   } else if(value.length<3) {
-                      callback(new Error('密码长度不能小于8'));
+                      callback(new Error('密码长度不能小于3'));
                   }else {
                       callback();
                   }
@@ -49,7 +50,6 @@
                       oldPassword: '',
                       newPassword: '',
                       rePassword: '',
-                      comparePassword:'e10adc3949ba59abbe56e057f20f883e'
                   },
                   rules: {
                       oldPassword: [
@@ -61,58 +61,51 @@
                       rePassword: [
                           { validator: validateRePass, trigger: 'blur' }
                       ]
-                  }
+                  },
+                  user: '',
+                  form:{},
               };
+          },
+          created(){
+            let str = sessionStorage.getItem("user") || "{}"
+            this.user = JSON.parse(str)
           },
           methods: {
             submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                      console.log('旧密码',md5(this.ruleForm.oldPassword))
-                      console.log('比较密码',this.ruleForm.comparePassword)
-                      /**********************************************************************************/ 
-                      if(md5(this.ruleForm.oldPassword) == this.ruleForm.comparePassword){
-                        console.log('修改成功')
-                        this.ruleForm.comparePassword = md5(this.ruleForm.newPassword)
-                        console.log('新密码',this.ruleForm.comparePassword)
-                      }
-                      /**********************************************************************************/
-                        console.log("=====this.ruleForm.oldPassword:========"+this.ruleForm.newPassword+"====")
-                        //数据校验成功，可以进行提交操作
-                        reqModUserPwd(md5(this.ruleForm.oldPassword), md5(this.ruleForm.newPassword)).then((res)=>{
-                          this.$message({
-                            type: 'success',
-                            message: '您的密码修改成功',
-                            duration: 1000
-                          })
-                          sessionStorage.removeItem('user')
-                          setTimeout(() => {
-                            this.$router.push({path:'/login'});
-                          }, 1000);
-                        }).catch(err=>{
-                          if (err.response.status === 403){
-                            this.$message({
-                              type: 'error',
-                              message: "密码不匹配",
-                              duration: 1000
-                            })
-                          } else {
-                            this.$message({
-                              type: 'error',
-                              message: "密码修改失败",
-                              duration: 1000
-                            })
-                          }
-  
-                        })
-                    } else {
-                        this.$message.error("请保证密码不为空且两次输入密码一致");
-                        return false;
+              this.$refs[formName].validate((valid) => {
+                if (valid) {
+                  console.log("=====this.ruleForm.oldPassword:========"+this.user.id+";;;;"+this.ruleForm.newPassword+"====")
+                  //数据校验成功，可以进行提交操作
+                  this.form.id = this.user.id
+                  this.form.oldPassword = md5(this.ruleForm.oldPassword)
+                  this.form.newPassword = md5(this.ruleForm.newPassword)
+                  console.log('form',this.form)
+                  request.post("/api/allUser/passwordModify", this.form).then((res)=>{
+                    if(res.code === 0){
+                      this.$message({
+                        type: 'success',
+                        message: '您的密码修改成功',
+                        duration: 1000
+                      })
+                      sessionStorage.removeItem('user')
+                      setTimeout(() => {
+                        this.$router.push({path:'/login'});
+                      }, 1000);
+                    }else{
+                      this.$message({
+                        type:"error",
+                        message:"添加失败"
+                      })
                     }
-                });
+                  })
+                } else {
+                  this.$message.error("请保证密码不为空且两次输入密码一致");
+                  return false;
+                }
+              });
             },
             resetForm(formName) {
-                this.$refs[formName].resetFields();
+              this.$refs[formName].resetFields();
             }
           }
   
