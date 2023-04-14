@@ -29,6 +29,9 @@ public class Cp {
     @TableField("patientId")
     private Integer patientId;
 
+    @TableField(exist = false)
+    private String doctorName;
+
     @TableField("date")
     private LocalDate date;
 
