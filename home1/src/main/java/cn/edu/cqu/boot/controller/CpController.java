@@ -1,11 +1,9 @@
 package cn.edu.cqu.boot.controller;
 
 import cn.edu.cqu.boot.config.Result;
-import cn.edu.cqu.boot.entity.AllUser;
-import cn.edu.cqu.boot.entity.Cp;
-import cn.edu.cqu.boot.entity.Doctor;
-import cn.edu.cqu.boot.entity.Patient;
+import cn.edu.cqu.boot.entity.*;
 import cn.edu.cqu.boot.mapper.CpMapper;
+import cn.edu.cqu.boot.mapper.DcMapper;
 import cn.edu.cqu.boot.service.ICpService;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
@@ -14,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -46,12 +45,15 @@ public class CpController {
     private CpMapper cpMapper;
 
     @Resource
+    private DcMapper dcMapper;
+
+    @Resource
     private ICpService cpService;
 
     //查找所有病历
     @RequestMapping(value = "/cpList")
     @ResponseBody
-    public Result<?> searchAllData(){
+    public Result<?> searchAllData() {
         List<Cp> cpList = cpMapper.searchAll();
         return Result.success(cpList);
     }
@@ -59,7 +61,7 @@ public class CpController {
     //通过病历ID查找病历
     @GetMapping(value = "/cpByCpId")
     @ResponseBody
-    public Result<?> searchByCpId(@RequestParam int cpId){
+    public Result<?> searchByCpId(@RequestParam int cpId) {
         Cp cpList = cpService.getById(cpId);
         return Result.success(cpList);
     }
@@ -67,7 +69,7 @@ public class CpController {
     //通过医生ID查找病历
     @RequestMapping(value = "/cpByDoctorId")
     @ResponseBody
-    public Result<?> searchByDoctorId(@RequestParam int doctorId){
+    public Result<?> searchByDoctorId(@RequestParam int doctorId) {
         List<Cp> cpList = cpMapper.searchByDoctorId(doctorId);
         return Result.success(cpList);
     }
@@ -79,7 +81,7 @@ public class CpController {
         List<Cp> cpList = cpMapper.selectList(
                 Wrappers.<Cp>query()
                         .lambda()
-                        .eq(Cp::getPatientId,p.getPatientId())
+                        .eq(Cp::getPatientId, p.getPatientId())
                         .orderByDesc(Cp::getDate));
 
         System.out.println(cpList);
@@ -92,11 +94,25 @@ public class CpController {
         List<Cp> cpList = cpMapper.selectList(
                 Wrappers.<Cp>query()
                         .lambda()
-                        .eq(Cp::getPatientId,id)
+                        .eq(Cp::getPatientId, id)
                         .orderByDesc(Cp::getDate));
 
         System.out.println(cpList);
         return Result.success(cpList);
+    }
+
+    @GetMapping(value = "/dcByCpId")
+    public Result<?> searchByCpId(@RequestParam Integer id) {
+        List<Dc> dcList = dcMapper.selectJoinList(Dc.class,
+                new MPJLambdaWrapper<Dc>()
+                        .selectAll(Dc.class)
+                        .select(Doctor::getDoctorName, Doctor::getDoctorPosition)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId, Dc::getDoctorId)
+                        .eq(Dc::getCpId, id)
+//                        .orderByDesc(Dc::getDcDate)
+        );
+        System.out.println(dcList);
+        return Result.success(dcList);
     }
 
 //    //根据cpID在cp表修改诊断报告
@@ -110,7 +126,7 @@ public class CpController {
 
     //根据cpID在cp表修改诊断报告
     @PostMapping("/updateCaseDesc")
-    public Result<?> updateCaseDesc(@RequestBody Cp cp){
+    public Result<?> updateCaseDesc(@RequestBody Cp cp) {
         return Result.success(cpMapper.updateById(cp));
     }
 
@@ -138,9 +154,9 @@ public class CpController {
             //创建一个字符串对象，来存放读取到的文件内容
             String s = null;
             //创建一个cp对象的链表，用来存放cp对象
-           //List<Cp> cpList = new LinkedList<>();
+            //List<Cp> cpList = new LinkedList<>();
             //记录成功添加的数据数量
-            int num=0;
+            int num = 0;
             //使用while循环来遍历读取的txt文件的内容
             while ((s = reader.readLine()) != null) {
                 System.err.println("进循环了吗？");
@@ -177,7 +193,7 @@ public class CpController {
             reader.close();
             Result result = new Result<>();
             result.setCode(0);
-            result.setMsg("添加成功"+num+"条数据");
+            result.setMsg("添加成功" + num + "条数据");
             System.err.print("传进来了");
             return result;
         } catch (IOException e) {

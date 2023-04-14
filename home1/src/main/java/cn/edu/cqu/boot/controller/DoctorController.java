@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-//@Controller
 @RequestMapping("/doctor")
 public class DoctorController {
     @Resource
