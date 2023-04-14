@@ -91,7 +91,7 @@ public class CpController {
 
     @GetMapping(value = "/cpByPatientId1")
     public Result<?> searchByPatientId1(@RequestParam Integer id) {
-        List<Cp> cpList = cpMapper.selectList(
+        List<Cp> cpList = cpMapper.selectJoinList(Cp.class,
                 new MPJLambdaWrapper<Cp>()
                         .selectAll(Cp.class)
                         .select(Doctor::getDoctorName, Doctor::getDoctorPosition)
