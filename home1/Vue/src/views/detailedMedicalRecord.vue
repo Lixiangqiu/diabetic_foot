@@ -10,8 +10,6 @@
           <div>年龄  {{form.patientAge}}岁</div>
           <div>性别  {{form.patientGender}}</div>
         </div>
-        <div class="box2" v-if="cp.caseDesc !== ''">诊断报告：{{cp.caseDesc}}</div>
-        <div class="box2" v-else>诊断报告：暂无报告</div>
       </div>
 
       <el-divider style="transform: translateY(-5px)"></el-divider>
@@ -61,11 +59,7 @@
 
       <el-divider></el-divider>
 
-      <h3 style="transform: translateY(-10px)">请在此输入诊断报告</h3>
-      <div>
-        <el-input type="textarea" :rows="4" v-model="desc" class="input" placeholder="发表你的看法"></el-input>
-        <div style="text-align: right; padding: 10px 0 5px 0"><el-button type="primary" @click="saveData()">保存</el-button></div>
-      </div>
+      
 
       <el-divider></el-divider>
 
@@ -109,7 +103,6 @@ export default {
 
   methods: {
     load(){
-        console.log('病人名字',this.$route.query.patientName,'用户名字',this.user.name)
       if(this.$route.query.doctorId == undefined || this.$route.query.patientName == undefined ||
       this.$route.query.patientName !== this.user.name){
         this.$router.push('/Info')

@@ -125,20 +125,22 @@
       <div style="margin:10px 0 0 400px;"><el-button type="primary" plain size="normal" @click="handleSelect">修改</el-button></div>
       <el-divider style="transform: translateY(-10px)"></el-divider>
 
-      <div v-if="userData.role === 3" style="transform: translateY(-10px)">
+      <div v-if="userData.role === 3" style="transform: translateY(-10px);">
         <h2>就诊记录</h2>
-        <el-collapse  v-model="activeNames" accordion>
-          <el-collapse-item :title="cp.date" v-for="cp in cpList" :key="cp.cpId" :name="cp.cpId">
+        <el-collapse  v-model="activeNames">
+          <el-collapse-item  :title="cp.date+'&emsp;&emsp;&emsp;&emsp;'+cp.doctorName" v-for= "(cp,index) in cpList" :key="cp.cpId" :name="cp.cpId" >
             <div>
               诊断报告 <span>{{cp.caseDesc}}</span>
               <span class="jumpToMedicalRecord" @click="jumpToMedicalRecord(cp.doctorId)">查看详细病历></span>
             </div>
-            <h2 style="margin-left:50px">医生建议</h2>
-            <div v-for="dc in dcList">
+            <h3 style="margin-left:50px">医生建议</h3>
+            <div v-for="dc in dcList[cp.cpId]">
               <hr>
-              &emsp;&emsp;&emsp;&emsp;<span>{{ dc.date }}</span>
-              &emsp;&emsp;&emsp;&emsp;<span>&nbsp;&nbsp;医生姓名: {{ dc.doctorName }}</span><br>
-              &emsp;&emsp;&emsp;&emsp;医生建议： <span>{{ dc.caseDesc }}</span>
+              &emsp;&emsp;&emsp;&emsp;<span>{{ dc.dcDate }}</span>
+              &emsp;&emsp;&emsp;&emsp;<span>{{ dc.doctorName }}</span>
+              &emsp;&emsp;&emsp;&emsp;职位: 
+              <span>{{dc.doctorPosition}}</span><br>
+              &emsp;&emsp;&emsp;&emsp;医生建议： <span>{{ dc.doctorCon }}</span>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -233,12 +235,12 @@ export default {
           cpid:6,
           doctorId:38,
           doctorName:'李军',
-          doctorPosition:'主治医师',
+          doctorPosition:'副院长',
           caseDesc:'建议住院观察',
           date:'2022-5-8'
         }
       ],
-      activeNames:1,
+      activeNames:['1'],
       rules: {
         gender: [
           { required: true, message: '请正确输入性别', type: "enum", enum: ['男', '女'],trigger: 'blur' },
@@ -267,11 +269,6 @@ export default {
     this.load()
   },
   methods: {
-
-    handleChange(val){
-      this.activeNames = val
-    },
-
     handleSelect(){
       this.dialogVisible2 = true
       this.$refs['upload'].clearFiles()
@@ -375,8 +372,18 @@ export default {
         params:{
           id:this.form.id
         }}).then(res =>{
-        console.log(res)
+        console.log('cp',res)
         this.cpList = res.data
+        this.cpList.forEach(item =>
+          request.get("/api/cp/dcByCpId",{
+            params:{
+              id:item.cpId
+            }}).then(res =>{
+            console.log(res)
+            this.dcList[item.cpId] = res.data
+            console.log('dcList',this.dcList[item.cpId])
+          })
+        )
       })
     },
 
@@ -388,7 +395,7 @@ export default {
                       patientName:this.userData.name
                     }
                 })
-    }
+    },
   }
 }
 </script>
