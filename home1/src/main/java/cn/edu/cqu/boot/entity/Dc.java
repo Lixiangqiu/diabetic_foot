@@ -11,20 +11,33 @@ package cn.edu.cqu.boot.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
+@TableName("dc")
 public class Dc implements Serializable {
 
-    @TableId(value = "dcid", type = IdType.AUTO)
+    @TableId(value = "dcId", type = IdType.AUTO)
     private Integer dcId;
 
-    @TableField("cpid")
+    @TableField(value = "dcDate")
+    private String dcDate;
+
+    @TableField("cpId")
     private Integer cpId;
 
-    @TableField("doctorid")
+    @TableField("doctorId")
     private Integer doctorId;
 
-    @TableField("caseDesc")
+    @TableField(exist = false)
+    private String doctorName;
+
+    @TableField(exist = false)
+    private String doctorPosition;
+
+    @TableField("doctorCon")
     private String caseDesc;
 }
