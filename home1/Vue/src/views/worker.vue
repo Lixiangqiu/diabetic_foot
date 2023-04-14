@@ -78,20 +78,20 @@
       </div>
 
       <el-dialog title="更新信息" v-model="dialogVisible" width="30%">
-        <el-form :model="form" label-width="120px">
+        <el-form :model="form" label-width="120px" :rules="rules">
           <el-form-item label="名称">
             <el-input v-model="form.doctorName" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="性别">
+          <el-form-item label="性别" prop="doctorGender">
             <el-input v-model="form.doctorGender" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="年龄">
+          <el-form-item label="年龄" prop="doctorAge">
             <el-input v-model="form.doctorAge" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱">
+          <el-form-item label="邮箱" prop="doctorEmail">
             <el-input v-model="form.doctorEmail" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="职位">
+          <el-form-item label="职位" prop="doctorPosition">
             <el-input v-model="form.doctorPosition" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="权限">
@@ -174,7 +174,9 @@ export default {
               message:"修改成功"
             })
             this.dialogVisible = false
-            location.reload()
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             console.log('修改失败')
             this.$message({
@@ -186,7 +188,6 @@ export default {
           
         })
       }else {
-        console.log('数据',this.form)
         request.post("/api/allUser/createDoctorData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
@@ -194,7 +195,10 @@ export default {
               type:"success",
               message:"添加成功"
             })
-            location.reload()
+            this.dialogVisible = false
+            setTimeout(() => {
+              location.reload()
+            }, 200)
           }else{
             this.$message({
               type:"error",
@@ -221,7 +225,9 @@ export default {
             type:"success",
             message:"删除成功"
           })
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 200)
         }else{
           this.$message({
             type:"error",
@@ -229,7 +235,6 @@ export default {
           })
         }
       })
-      
       this.load()
     },
 

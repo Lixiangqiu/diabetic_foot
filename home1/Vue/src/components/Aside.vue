@@ -20,9 +20,9 @@
         <template #title>
           <i class="el-icon-location"></i ><span style="color: #080808">功能模块</span>
         </template>
-        <el-submenu v-if="user.role !== 1">
+        <el-submenu v-if="user.role == 2">
           <template #title>
-            <i class="el-icon-s-custom"></i ><span style="color: #080808">病历管理</span>
+            <i class="el-icon-s-custom"  v-if="user.role ===2"></i ><span style="color: #080808">病历管理</span>
           </template>
             <el-menu-item index="/dMP" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user-solid" ></i>个人病历</el-menu-item>
             <el-menu-item index="/dMPOther" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user" ></i>他人病历</el-menu-item>
