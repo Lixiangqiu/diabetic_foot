@@ -35,6 +35,9 @@ public class Cp {
     @TableField("date")
     private LocalDate date;
 
+    @TableField("is_public")
+    private Boolean isPublic;
+
     @TableField("paraT1")
     private Float paraT1;
 

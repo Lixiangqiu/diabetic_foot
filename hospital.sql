@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 14/04/2023 16:42:55
+ Date: 16/04/2023 16:28:02
 */
 
 SET NAMES utf8mb4;
@@ -88,7 +88,8 @@ CREATE TABLE `cp`  (
   `cpId` int(0) NOT NULL AUTO_INCREMENT,
   `doctorId` int(0) NULL DEFAULT NULL,
   `patientId` int(0) NULL DEFAULT NULL,
-  `date` date NULL DEFAULT NULL,
+  `date` date NOT NULL,
+  `is_public` tinyint(1) NOT NULL,
   `paraT1` float NULL DEFAULT NULL,
   `paraM1` float NULL DEFAULT NULL,
   `paraM2` float NULL DEFAULT NULL,
@@ -112,10 +113,10 @@ CREATE TABLE `cp`  (
 -- ----------------------------
 -- Records of cp
 -- ----------------------------
-INSERT INTO `cp` VALUES (2, 3, 42, '2022-05-06', 1, 2, 3, 4, 5, 6, 7, 9, '有所恶化', 9, 8, 7, 6, 5, 5, 4, 2);
-INSERT INTO `cp` VALUES (3, 3, 42, '2022-05-05', 1, 2, 3, 4, 5, 6, 7, 10, '已有很大好转', 7, 8, 9, 2, 6, 5, 4, 2);
-INSERT INTO `cp` VALUES (4, 3, 49, '2022-06-05', 1, 2, 5, 4, 5, 6, 5, 3, '123', 8, 9, 9, 7, 3, 8, 9, 6);
-INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 1, 2, 5, 4, 5, 6, 5, 3, '有所好转', 8, 9, 9, 7, 3, 8, 9, 6);
+INSERT INTO `cp` VALUES (2, 3, 42, '2022-05-06', 0, 1, 2, 3, 4, 5, 6, 7, 9, '有所恶化', 9, 8, 7, 6, 5, 5, 4, 2);
+INSERT INTO `cp` VALUES (3, 3, 42, '2022-05-05', 1, 1, 2, 3, 4, 5, 6, 7, 10, '已有很大好转', 7, 8, 9, 2, 6, 5, 4, 2);
+INSERT INTO `cp` VALUES (4, 3, 49, '2022-06-05', 1, 1, 2, 5, 4, 5, 6, 5, 3, '123', 8, 9, 9, 7, 3, 8, 9, 6);
+INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 0, 1, 2, 5, 4, 5, 6, 5, 3, '有所好转', 8, 9, 9, 7, 3, 8, 9, 6);
 
 -- ----------------------------
 -- Table structure for dc
