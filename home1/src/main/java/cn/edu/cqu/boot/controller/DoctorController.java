@@ -3,9 +3,11 @@ package cn.edu.cqu.boot.controller;
 import cn.edu.cqu.boot.config.Result;
 import cn.edu.cqu.boot.entity.*;
 import cn.edu.cqu.boot.mapper.DoctorMapper;
+import cn.edu.cqu.boot.mapper.PatientMapper;
 import cn.edu.cqu.boot.service.IDoctorService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +24,23 @@ public class DoctorController {
     @Resource
     private DoctorMapper doctorMapper;
 
+    @Resource
+    private PatientMapper patientMapper;
+
     @PostMapping("/saveData")  //管理员增加医生
-    public Result<?> saveData(@RequestBody Doctor doctor){
+    public Result<?> saveData(@RequestBody Doctor doctor) {
         doctorService.save(doctor);
         return Result.success();
     }
 
     @PutMapping("/updateData")  //管理员更新增加
-    public Result<?> updateData(@RequestBody Doctor doctor){
+    public Result<?> updateData(@RequestBody Doctor doctor) {
         doctorService.updateById(doctor);
         return Result.success();
     }
 
     @DeleteMapping("/{id}")   //管理员删除医生
-    public Result<?> deleteData(@PathVariable Long id){
+    public Result<?> deleteData(@PathVariable Long id) {
         doctorService.removeById(id);
         return Result.success();
     }
@@ -43,24 +48,23 @@ public class DoctorController {
     @GetMapping("/findPage")   //查询医生
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "3") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search)
-    {
-        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum,pageSize),Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName,search));
+                              @RequestParam(defaultValue = "") String search) {
+        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
         System.out.println(doctorIPage);
         return Result.success(doctorIPage);
     }
 
     @PostMapping("/showPatientByDoctorId") //根据医生ID选所属病人
-    public Result<?> showPatientByDoctorId(@RequestParam int doctorId){
+    public Result<?> showPatientByDoctorId(@RequestParam int doctorId) {
         List<PatientCase> patientCaseList = doctorMapper.selectJoinList(PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
-                        .select(Cp::getCpId,Cp::getDate,Cp::getParaT1,Cp::getParaM1,Cp::getParaM2,Cp::getParaM3,
-                                Cp::getParaM4, Cp::getParaM5,Cp::getParaHL,Cp::getParaHM,Cp::getCaseDesc)
-                        .leftJoin(Cp.class,Cp::getDoctorId,Doctor::getDoctorId)
-                        .leftJoin(Patient.class,Patient::getPatientId,Cp::getPatientId)
-                        .eq(Doctor::getDoctorId,doctorId));
-        if(patientCaseList!=null){
+                        .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
+                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                        .leftJoin(Cp.class, Cp::getDoctorId, Doctor::getDoctorId)
+                        .leftJoin(Patient.class, Patient::getPatientId, Cp::getPatientId)
+                        .eq(Doctor::getDoctorId, doctorId));
+        if (patientCaseList != null) {
 
 //            for(PatientCase p : patientCaseList){
 //                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd:HH");
@@ -69,28 +73,47 @@ public class DoctorController {
 //                p.setDate(sdf.parse());
 //            }
             return Result.success(patientCaseList);
-        }
-        else {
-            return Result.error(1,"没有数据");
+        } else {
+            return Result.error(1, "没有数据");
         }
     }
 
+    @GetMapping(value = "/showPublicCaseByDoctorId")
+    public Result<?> showPublicCase(@RequestParam Integer doctorId) {
+        List<PatientCase> patientCaseList = patientMapper.selectJoinList(PatientCase.class,
+                new MPJLambdaWrapper<Patient>()
+                        .selectAll(Patient.class)
+                        .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
+                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                        .select(Doctor::getDoctorName)
+                        .leftJoin(Cp.class, Cp::getPatientId, Patient::getPatientId)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId ,Cp::getDoctorId)
+                        .eq(Cp::getIsPublic, true)
+                        .ne(Cp::getDoctorId, doctorId)
+        );
+        if (patientCaseList != null) {
+            return Result.success(patientCaseList);
+        } else {
+            return Result.error(1, "没有数据");
+        }
+    }
+
+
     @PostMapping("/showCaseByDoctorIdPatientId") //根据病人ID和医生ID查所有病历
-    public Result<?> showCaseByDPId(@RequestParam int doctorId,@RequestParam int patientId){
+    public Result<?> showCaseByDPId(@RequestParam int doctorId, @RequestParam int patientId) {
         List<PatientCase> patientCaseList = doctorMapper.selectJoinList(PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
-                        .select(Cp::getCpId,Cp::getDate,Cp::getParaT1,Cp::getParaM1,Cp::getParaM2,Cp::getParaM3,
-                                Cp::getParaM4, Cp::getParaM5,Cp::getParaHL,Cp::getParaHM,Cp::getCaseDesc)
-                        .leftJoin(Cp.class,Cp::getDoctorId,Doctor::getDoctorId)
-                        .leftJoin(Patient.class,Patient::getPatientId,Cp::getPatientId)
-                        .eq(Doctor::getDoctorId,doctorId)
-                        .eq(Patient::getPatientId,patientId));
-        if(patientCaseList!=null){
+                        .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
+                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                        .leftJoin(Cp.class, Cp::getDoctorId, Doctor::getDoctorId)
+                        .leftJoin(Patient.class, Patient::getPatientId, Cp::getPatientId)
+                        .eq(Doctor::getDoctorId, doctorId)
+                        .eq(Patient::getPatientId, patientId));
+        if (patientCaseList != null) {
             return Result.success(patientCaseList);
-        }
-        else {
-            return Result.error(1,"没有数据");
+        } else {
+            return Result.error(1, "没有数据");
         }
     }
 
@@ -98,23 +121,22 @@ public class DoctorController {
     public Result<?> showCaseByDIdPName(@RequestParam int doctorId,
                                         @RequestParam(defaultValue = "1") Integer pageNum,
                                         @RequestParam(defaultValue = "5") Integer pageSize,
-                                        @RequestParam String patientName){
+                                        @RequestParam String patientName) {
         System.err.println("chabingren");
-        IPage<PatientCase> patientCaseIPage = doctorMapper.selectJoinPage(new Page<>(pageNum,pageSize),PatientCase.class,
+        IPage<PatientCase> patientCaseIPage = doctorMapper.selectJoinPage(new Page<>(pageNum, pageSize), PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
-                        .select(Cp::getCpId,Cp::getDate,Cp::getParaT1,Cp::getParaM1,Cp::getParaM2,Cp::getParaM3,
-                                Cp::getParaM4, Cp::getParaM5,Cp::getParaHL,Cp::getParaHM,Cp::getCaseDesc)
-                        .leftJoin(Cp.class,Cp::getDoctorId,Doctor::getDoctorId)
-                        .leftJoin(Patient.class,Patient::getPatientId,Cp::getPatientId)
-                        .eq(Doctor::getDoctorId,doctorId)
-                        .like(Patient::getPatientName,patientName)
+                        .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
+                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                        .leftJoin(Cp.class, Cp::getDoctorId, Doctor::getDoctorId)
+                        .leftJoin(Patient.class, Patient::getPatientId, Cp::getPatientId)
+                        .eq(Doctor::getDoctorId, doctorId)
+                        .like(Patient::getPatientName, patientName)
                         .orderByDesc(Cp::getDate));
-        if(patientCaseIPage!=null){
+        if (patientCaseIPage != null) {
             return Result.success(patientCaseIPage);
-        }
-        else {
-            return Result.error(1,"没有数据");
+        } else {
+            return Result.error(1, "没有数据");
         }
     }
 }

@@ -23,6 +23,9 @@ public class PatientCase {
     private String patientAddress;
     private String patientPhone;
     private String patientEmail;
+
+    private String doctorName;
+
     private Integer cpId;
 
     private LocalDate date;

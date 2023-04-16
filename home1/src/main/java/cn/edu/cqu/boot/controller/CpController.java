@@ -140,14 +140,19 @@ public class CpController {
      * @Date 2023/4/16 16:38
      * @Auther WangSanmu
      */
-    @GetMapping(value = "/showPublicCase")
-    public Result<?> showPublicCase(@RequestParam Integer id) {
-        List<Cp> cpList = cpService.list(Wrappers.<Cp>query().lambda()
-                .ne(Cp::getDoctorId, id)
-                .eq(Cp::getIsPublic, true)
-        );
-        return Result.success(cpList);
-    }
+//    @GetMapping(value = "/showPublicCase")
+//    public Result<?> showPublicCase(@RequestParam Integer id) {
+//        List<PatientCase> patientCaseList = cpMapper.selectJoinList(cp.class,
+//                new MPJLambdaWrapper<Patient>()
+//                        .selectAll(Patient.class)
+//                        .select(Cp::getCpId,Cp::getDate,Cp::getParaT1,Cp::getParaM1,Cp::getParaM2,Cp::getParaM3,
+//                                Cp::getParaM4, Cp::getParaM5,Cp::getParaHL,Cp::getParaHM,Cp::getCaseDesc)
+//                        .leftJoin(Cp.class,Cp::getDoctorId,Doctor::getDoctorId)
+//                        .leftJoin(Patient.class,Patient::getPatientId,Cp::getPatientId)
+//                        .eq(Doctor::getDoctorId,doctorId)
+//                        .eq(Patient::getPatientId,patientId));
+//        return Result.success(cpList);
+//    }
 
 //    //根据cpID在cp表修改诊断报告
 //    @PostMapping("/updateCaseDesc")
