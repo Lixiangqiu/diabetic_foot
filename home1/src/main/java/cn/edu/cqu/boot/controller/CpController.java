@@ -133,6 +133,19 @@ public class CpController {
         return Result.success(dcList);
     }
 
+    /**
+     * @Description 展示所有公开病例
+     * @Param [id]
+     * @return cn.edu.cqu.boot.config.Result<Cp>
+     * @Date 2023/4/16 16:38
+     * @Auther WangSanmu
+     */
+    @GetMapping(value = "/showPublicCase")
+    public Result<?> showPublicCase(@RequestParam Integer id) {
+        List<Cp> cpList = cpService.list(Wrappers.<Cp>query().lambda().eq(Cp::getIsPublic, true));
+        return Result.success(cpList);
+    }
+
 //    //根据cpID在cp表修改诊断报告
 //    @PostMapping("/updateCaseDesc")
 //    public Result<?> updateCaseDesc(@RequestBody String caseDesc,
@@ -186,6 +199,7 @@ public class CpController {
                 cp.setDoctorId(doctorId);
                 cp.setPatientId(id);
                 cp.setDate(LocalDate.now());
+                cp.setIsPublic(false);
                 cp.setParaT1(Float.parseFloat(dd[0]));
                 cp.setParaM1(Float.parseFloat(dd[1]));
                 cp.setParaM2(Float.parseFloat(dd[2]));
