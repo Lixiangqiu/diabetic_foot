@@ -85,9 +85,9 @@ public class DoctorController {
                         .selectAll(Patient.class)
                         .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
                                 Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
-//                        .select(Doctor::getDoctorName)
+                        .select(Doctor::getDoctorName)
                         .leftJoin(Cp.class, Cp::getPatientId, Patient::getPatientId)
-//                        .leftJoin(Doctor.class, Cp::getDoctorId, Doctor::getDoctorId)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId ,Cp::getDoctorId)
                         .eq(Cp::getIsPublic, true)
                         .ne(Cp::getDoctorId, doctorId)
         );
