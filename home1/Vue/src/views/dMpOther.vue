@@ -16,6 +16,11 @@
           </el-table-column>
           <el-table-column
               align="center"
+              prop="doctorName"
+              label="医生姓名" width="100px">
+          </el-table-column>
+          <el-table-column
+              align="center"
               prop="patientName"
               label="姓名">
           </el-table-column>
@@ -114,24 +119,19 @@
       },
   
       load(){
-        request.get("/api/doctor/showCaseByDoctorIdPatientName",{
+        request.get("/api/doctor/showPublicCaseByDoctorId",{
           params:{
             doctorId:this.user.id,
-            pageNum:this.currentPage,
-            pageSize:this.pageSize,
-            patientName:this.search
           }
-        }).then(res =>{
-          console.log(res)
-          this.tableData = res.data.records
-          this.tableData.forEach(item =>{
-            if(item.caseDesc === null || item.caseDesc === ""){
-              item.caseDesc = "暂无诊断报告"
-            }
-          })
-          this.total=res.data.total
-          this.currentPage=res.data.current
-          this.pageSize=res.data.size
+        }).then(res =>{  
+          this.tableData = res.data
+          console.log('返回值',this.tableData)
+          // this.tableData.forEach(item =>{
+          //   if(item.caseDesc === null || item.caseDesc === ""){
+          //     item.caseDesc = "暂无诊断报告"
+          //   }
+          // })
+         
         })
       }
     }

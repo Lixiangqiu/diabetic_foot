@@ -128,13 +128,26 @@
       <div v-if="userData.role === 3" style="transform: translateY(-10px);">
         <h2>就诊记录</h2>
         <el-collapse  v-model="activeNames">
-          <el-collapse-item  :title="cp.date+'&emsp;&emsp;&emsp;&emsp;'+cp.doctorName" v-for= "(cp,index) in cpList" :key="cp.cpId" :name="cp.cpId" >
+          <el-collapse-item  :title="cp.date+'&emsp;&emsp;&emsp;&emsp;'+cp.doctorName" v-for= "(cp,index) in cpList" :key="cp.cpId" :name="cp.cpId">
+              <el-tooltip class="item" effect="dark" content="选择公开病历可以让其他医生也能看到您的病历并提供意见" placement="top-start">
+                <i class="el-icon-question" style="float:right;transform: translateY(2.5px);"></i>
+              </el-tooltip>
+              <el-switch
+                v-model="value1[cp.cpId]"
+                active-text="公开病历"
+                inactive-text="不公开病历"
+                class="publicMedicalRecords"
+                @change="hanldeChangeSwitch(cp)"
+                >
+              </el-switch>
+           
             <div>
               诊断报告 <span>{{cp.caseDesc}}</span>
               <span class="jumpToMedicalRecord" @click="jumpToMedicalRecord(cp.doctorId)">查看详细病历></span>
             </div>
             <h3 style="margin-left:50px">医生建议</h3>
             <div v-for="dc in dcList[cp.cpId]">
+              
               <hr>
               &emsp;&emsp;&emsp;&emsp;<span>{{ dc.dcDate }}</span>
               &emsp;&emsp;&emsp;&emsp;<span>{{ dc.doctorName }}</span>
@@ -195,6 +208,8 @@ export default {
   name: "Info",
   data() {
     return {
+      value1:[true],
+      num:1,
       form: {},
       userData: {},
       dialogVisible2:false,
@@ -269,6 +284,25 @@ export default {
     this.load()
   },
   methods: {
+    hanldeChangeSwitch(cp){
+      cp.isPublic = this.value1[cp.cpId]
+      console.log('cp',cp)
+      request.put("/api/cp/setPublic", cp).then(res => {
+          console.log(res)
+          if (res.code === 0) {
+            this.$message({
+              type: "success",
+              message: "修改成功"
+            })
+            
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            })
+          }
+        })
+    },
     handleSelect(){
       this.dialogVisible2 = true
       this.$refs['upload'].clearFiles()
@@ -380,6 +414,7 @@ export default {
               id:item.cpId
             }}).then(res =>{
             console.log(res)
+            this.value1[item.cpId] = item.isPublic
             this.dcList[item.cpId] = res.data
             console.log('dcList',this.dcList[item.cpId])
           })
@@ -430,5 +465,12 @@ export default {
   }
   .jumpToMedicalRecord:hover{
     color:rgb(64,158,255);
+  }
+
+  .publicMedicalRecords{
+    position:relative;
+    z-index:100;
+    float:right;
+    margin-right:5px;
   }
 </style>
