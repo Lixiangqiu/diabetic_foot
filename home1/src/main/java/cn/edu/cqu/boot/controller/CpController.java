@@ -51,12 +51,12 @@ public class CpController {
     private ICpService cpService;
 
     //查找所有病历
-    @RequestMapping(value = "/cpList")
-    @ResponseBody
-    public Result<?> searchAllData() {
-        List<Cp> cpList = cpMapper.searchAll();
-        return Result.success(cpList);
-    }
+//    @RequestMapping(value = "/cpList")
+//    @ResponseBody
+//    public Result<?> searchAllData() {
+//        List<Cp> cpList = cpMapper.selectAll();
+//        return Result.success(cpList);
+//    }
 
     //通过病历ID查找病历
     @GetMapping(value = "/cpByCpId")
@@ -73,6 +73,13 @@ public class CpController {
         List<Cp> cpList = cpMapper.searchByDoctorId(doctorId);
         return Result.success(cpList);
     }
+//    @GetMapping(value = "/cpByDoctorId")
+//    @ResponseBody
+//    public Result<?> searchByDoctorId(@RequestParam int doctorId) {
+//        List<Cp> cpList = cpMapper.searchByDoctorId(doctorId)
+//        System.out.println(cpList);
+//        return Result.success(cpList);
+//    }
 
     //通过病人ID查找病历并按时间排序
     @PostMapping(value = "/cpByPatientId")
@@ -100,6 +107,16 @@ public class CpController {
         );
         System.out.println(cpList);
         return Result.success(cpList);
+    }
+
+    @PutMapping(value = "/setPublic")
+    public Result<?> setPublic(@RequestBody Cp userCp) {
+        Cp cp = cpService.getOne(
+                Wrappers.<Cp>query().lambda().eq(Cp::getCpId, userCp.getCpId())
+        );
+        cp.setIsPublic(userCp.getIsPublic());
+        cpService.updateById(cp);
+        return Result.success(cp);
     }
 
     @GetMapping(value = "/dcByCpId")
