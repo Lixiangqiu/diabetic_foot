@@ -51,12 +51,12 @@ public class CpController {
     private ICpService cpService;
 
     //查找所有病历
-//    @RequestMapping(value = "/cpList")
-//    @ResponseBody
-//    public Result<?> searchAllData() {
-//        List<Cp> cpList = cpMapper.selectAll();
-//        return Result.success(cpList);
-//    }
+    @RequestMapping(value = "/cpList")
+    @ResponseBody
+    public Result<?> searchAllData() {
+        List<Cp> cpList = cpService.list();
+        return Result.success(cpList);
+    }
 
     //通过病历ID查找病历
     @GetMapping(value = "/cpByCpId")
@@ -134,15 +134,18 @@ public class CpController {
     }
 
     /**
-     * @Description 展示所有公开病例
-     * @Param [id]
      * @return cn.edu.cqu.boot.config.Result<Cp>
+     * @Description 展示非所属患者公开病例
+     * @Param [id]
      * @Date 2023/4/16 16:38
      * @Auther WangSanmu
      */
     @GetMapping(value = "/showPublicCase")
     public Result<?> showPublicCase(@RequestParam Integer id) {
-        List<Cp> cpList = cpService.list(Wrappers.<Cp>query().lambda().eq(Cp::getIsPublic, true));
+        List<Cp> cpList = cpService.list(Wrappers.<Cp>query().lambda()
+                .ne(Cp::getDoctorId, id)
+                .eq(Cp::getIsPublic, true)
+        );
         return Result.success(cpList);
     }
 
