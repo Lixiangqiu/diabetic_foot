@@ -5,6 +5,7 @@ import cn.edu.cqu.boot.entity.*;
 import cn.edu.cqu.boot.mapper.CpMapper;
 import cn.edu.cqu.boot.mapper.DcMapper;
 import cn.edu.cqu.boot.service.ICpService;
+import cn.edu.cqu.boot.service.IPatientService;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -50,6 +51,9 @@ public class CpController {
     @Resource
     private ICpService cpService;
 
+    @Resource
+    private IPatientService patientService;
+
     //查找所有病历
     @RequestMapping(value = "/cpList")
     @ResponseBody
@@ -58,12 +62,37 @@ public class CpController {
         return Result.success(cpList);
     }
 
-    //通过病历ID查找病历
+    /**
+     * @Description 通过CpId获取病例数据，可用于绘图
+     * @Param [cpId]
+     * @return cn.edu.cqu.boot.config.Result<Cp>
+     * @Date 2023/4/17 17:27
+     * @Auther WangSanmu
+     */
     @GetMapping(value = "/cpByCpId")
     @ResponseBody
     public Result<?> searchByCpId(@RequestParam int cpId) {
-        Cp cpList = cpService.getById(cpId);
-        return Result.success(cpList);
+//        Cp cpList = cpService.getById(cpId);
+//        return Result.success(cpList);
+        List<PatientCase> cpList = patientService.selectJoinList(PatientCase.class,
+                new MPJLambdaWrapper<Patient>()
+                        .selectAll(Patient.class)
+                        .select(
+                                Cp.class, i -> !"doctorId".equals(i.getProperty())
+                                        && !"patientId".equals(i.getProperty())
+                                        && !"isPublic".equals(i.getProperty())
+                        ).select(Cp::getCpId)
+                        .eq(Cp::getCpId, cpId)
+                        .select(Doctor::getDoctorName)
+                        .innerJoin(Cp.class, Cp::getPatientId, Patient::getPatientId)
+                        .innerJoin(Doctor.class, Doctor::getDoctorId, Cp::getDoctorId)
+//                        .eq(Cp::getCpId, cpId)
+        );
+        if (cpList != null) {
+            return Result.success(cpList);
+        } else {
+            return Result.error(1, "没有数据");
+        }
     }
 
     //通过医生ID查找病历

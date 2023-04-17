@@ -27,7 +27,6 @@ public class PatientCase {
     private String doctorName;
 
     private Integer cpId;
-
     private LocalDate date;
     private Float paraT1;
     private Float paraM1;
@@ -37,8 +36,13 @@ public class PatientCase {
     private Float paraM5;
     private Float paraHL;
     private Float paraHM;
+    private Float paraRT1;
+    private Float paraRM1;
+    private Float paraRM2;
+    private Float paraRM3;
+    private Float paraRM4;
+    private Float paraRM5;
+    private Float paraRHL;
+    private Float paraRHM;
     private String caseDesc;
-
-    private LocalDate dcDate;
-    private String doctorCon;
 }
