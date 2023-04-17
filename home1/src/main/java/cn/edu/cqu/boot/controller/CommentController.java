@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-//@Controller
 @RequestMapping("/comment")
 public class CommentController {
     @Resource

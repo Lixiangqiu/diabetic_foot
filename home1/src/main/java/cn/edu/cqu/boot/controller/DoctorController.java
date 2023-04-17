@@ -27,18 +27,39 @@ public class DoctorController {
     @Resource
     private PatientMapper patientMapper;
 
-    @PostMapping("/saveData")  //管理员增加医生
+    /**
+     * @Description 新增医生信息，只保存于表doctor
+     * @Param [doctor]
+     * @return cn.edu.cqu.boot.config.Result<Doctor>
+     * @Date 2023/4/17 14:46
+     * @Auther WangSanmu
+     */
+    @PostMapping("/saveData")  //管理员新增医生
     public Result<?> saveData(@RequestBody Doctor doctor) {
         doctorService.save(doctor);
         return Result.success();
     }
 
+    /**
+     * @Description 修改更新医生信息，只作用与doctor表
+     * @Param [doctor]
+     * @return cn.edu.cqu.boot.config.Result<doctor>
+     * @Date 2023/4/17 14:50
+     * @Auther WangSanmu
+     */
     @PutMapping("/updateData")  //管理员更新增加
     public Result<?> updateData(@RequestBody Doctor doctor) {
         doctorService.updateById(doctor);
         return Result.success();
     }
 
+    /**
+     * @Description 删除医生信息，只作用于doctor表
+     * @Param [id]
+     * @return cn.edu.cqu.boot.config.Result<msg>
+     * @Date 2023/4/17 14:53
+     * @Auther WangSanmu
+     */
     @DeleteMapping("/{id}")   //管理员删除医生
     public Result<?> deleteData(@PathVariable Long id) {
         doctorService.removeById(id);
@@ -53,6 +74,16 @@ public class DoctorController {
         System.out.println(doctorIPage);
         return Result.success(doctorIPage);
     }
+
+//    @GetMapping("/findPage")   //查询医生
+//    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
+//                              @RequestParam(defaultValue = "3") Integer pageSize,
+//                              @RequestParam(defaultValue = "") String search) {
+//        IPage< >
+//        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+//        System.out.println(doctorIPage);
+//        return Result.success(doctorIPage);
+//    }
 
     @PostMapping("/showPatientByDoctorId") //根据医生ID选所属病人
     public Result<?> showPatientByDoctorId(@RequestParam int doctorId) {
