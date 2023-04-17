@@ -92,6 +92,16 @@ const routes = [
             requiresDoctor: true 
           },
       },
+      {
+        path: 'dMpSuggestion',
+        name: 'dMpSuggestion',
+        component: () => import('@/views/dMpSuggestion'),
+        meta: {
+          title: '提供意见的病历',
+          url: '/dMpSuggestion',
+          requiresDoctor: true 
+        },
+      },
         //公共界面
         {
             path: 'im',
