@@ -2,9 +2,9 @@
     <el-card class="box-card" style="background-color: #FEFDFD">
       <div style="padding: 10px">
         <div style="margin: 10px 0">
-          <h2 style="text-align:center">查看公开病历</h2>
+            <h2 style="text-align:center">提供意见病历</h2>
           <el-input v-model="search" placeholder="please input name" style="width:20%" clearable></el-input>
-          <el-button type="primary" style="margin-left:5px" @click="searchName()">查询</el-button>
+          <el-button type="primary" style="margin-left:5px" @click="load">查询</el-button>
         </div>
         <el-table
             :data="tableData" stripe
@@ -37,8 +37,8 @@
           </el-table-column>
           <el-table-column
               align="center"
-              prop="caseDesc"
-              label="诊断报告">
+              prop="doctorCon"
+              label="诊断意见">
           </el-table-column>
           <el-table-column
               align="center"
@@ -57,7 +57,7 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="currentPage"
-              :page-sizes="[3, 6, 9]"
+              :page-sizes="[9, 6, 3]"
               :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
               :total="total">
@@ -73,7 +73,7 @@
   import request from "@/utils/request";
   
   export default {
-    name:"dMpOther",
+    name:"dMpSuggestion",
     components:{
     },
     data() {
@@ -81,7 +81,7 @@
         form:{},
         search:'',
         currentPage:1,
-        pageSize:3,
+        pageSize:9,
         total:0,
         tableData: [
           {
@@ -105,7 +105,7 @@
   
     methods:{
       handleEdit(row){
-        sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
+        // sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
         this.$router.push({
                     path: "/seePatientCp",
                     query: {
@@ -125,23 +125,25 @@
       },
   
       load(){
-        request.get("/api/doctor/showPublicCaseByDoctorId",{
+        request.get("/api/dc/findDcPage",{
           params:{
             doctorId:this.user.id,
+            pageNum:this.currentPage,
+            pageSize:this.pageSize,
+            patientName:this.search
           }
-        }).then(res =>{  
+        }).then(res =>{
+            console.log(res)
           this.tableData = res.data
-          var arr = this.tableData.filter(
-            item => item.patientName.includes(this.search)
-          )
-          console.log('arr',arr)
-          this.tableData = arr
-         
+          this.tableData.forEach(item =>{
+            if(item.caseDesc === null || item.caseDesc === ""){
+              item.caseDesc = "暂无诊断报告"
+            }
+          })
+          this.total=res.data.total
+          this.currentPage=res.data.current
+          this.pageSize=res.data.size
         })
-      },
-
-      searchName(){
-        this.load()
       }
     }
   }
