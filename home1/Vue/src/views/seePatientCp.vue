@@ -109,11 +109,6 @@ export default {
 
   methods: {
     load(){
-      if(this.$route.query.doctorId == undefined ||
-       this.$route.query.patientName == undefined ||
-        this.$route.query.doctorId != this.user.id){
-        this.$router.push('/dMp')
-      }
       request.get("/api/doctor/showCaseByDoctorIdPatientName",{
         params:{
           doctorId:this.$route.query.doctorId,

@@ -2,6 +2,7 @@
   <el-card class="box-card" style="background-color: #FEFDFD">
     <div style="padding: 10px">
       <div style="margin: 10px 0">
+        <h2 style="text-align:center">诊断报告病历</h2>
         <el-input v-model="search" placeholder="please input name" style="width:20%" clearable></el-input>
         <el-button type="primary" style="margin-left:5px" @click="load">查询</el-button>
       </div>
@@ -103,8 +104,7 @@ export default {
       this.$router.push({
                     path: "/seePatientCp",
                     query: {
-                      doctorId: this.user.id,
-                      patientName:row.patientName
+                      cpId:row.cpId
                     }
                 })
     },

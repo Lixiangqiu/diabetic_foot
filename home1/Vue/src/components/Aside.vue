@@ -24,9 +24,10 @@
           <template #title>
             <i class="el-icon-s-custom"  v-if="user.role ===2"></i ><span style="color: #080808">病历管理</span>
           </template>
-            <el-menu-item index="/dMP" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user-solid" ></i>个人病历</el-menu-item>
-            <el-menu-item index="/dMPOther" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user" ></i>他人病历</el-menu-item>
+            <el-menu-item index="/dMP" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user-solid" ></i>诊断报告病历</el-menu-item>
+            <el-menu-item index="/dMPSuggestion" style="color: #292929" v-if="user.role ===2"><i class="el-icon-user" ></i>提供意见病历</el-menu-item>
         </el-submenu>
+        <el-menu-item index="/dMPOther" style="color: #292929" v-if="user.role ===2"><i class="el-icon-search" ></i>查看公开病历</el-menu-item>
         <el-menu-item index="/doctorInfo" style="color: #292929" v-if="user.role ===3"><i class="el-icon-dish"></i>选择医师</el-menu-item>
         <el-menu-item index="/im"> <i class="el-icon-chat-dot-round"></i>在线咨询</el-menu-item>
         <el-menu-item index="/commentList" style="color: #292929"><i class="el-icon-dish"></i>热门讨论</el-menu-item>
