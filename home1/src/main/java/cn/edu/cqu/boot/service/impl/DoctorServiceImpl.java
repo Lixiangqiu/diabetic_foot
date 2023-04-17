@@ -4,6 +4,7 @@ import cn.edu.cqu.boot.entity.Doctor;
 import cn.edu.cqu.boot.mapper.DoctorMapper;
 import cn.edu.cqu.boot.service.IDoctorService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.base.MPJBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,7 +12,7 @@ import java.util.List;
 
 
 @Service
-public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> implements IDoctorService {
+public class DoctorServiceImpl extends MPJBaseServiceImpl<DoctorMapper, Doctor> implements IDoctorService {
 
     @Resource
     private  DoctorMapper doctorMapper;

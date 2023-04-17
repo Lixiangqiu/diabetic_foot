@@ -32,12 +32,12 @@ public class Dc implements Serializable {
     @TableField("doctorId")
     private Integer doctorId;
 
+    @TableField("doctorCon")
+    private String doctorCon;
+
     @TableField(exist = false)
     private String doctorName;
 
     @TableField(exist = false)
     private String doctorPosition;
-
-    @TableField("doctorCon")
-    private String doctorCon;
 }

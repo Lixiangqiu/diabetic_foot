@@ -38,4 +38,7 @@ public class PatientCase {
     private Float paraHL;
     private Float paraHM;
     private String caseDesc;
+
+    private LocalDate dcDate;
+    private String doctorCon;
 }

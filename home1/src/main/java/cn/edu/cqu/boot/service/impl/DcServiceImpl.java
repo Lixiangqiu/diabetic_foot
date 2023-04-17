@@ -13,19 +13,22 @@ import cn.edu.cqu.boot.mapper.CpMapper;
 import cn.edu.cqu.boot.mapper.DcMapper;
 import cn.edu.cqu.boot.service.IDcService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.base.MPJBaseServiceImpl;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-public class DcServiceImpl extends ServiceImpl<DcMapper, Dc> implements IDcService {
+@Service
+public class DcServiceImpl extends MPJBaseServiceImpl<DcMapper, Dc> implements IDcService {
     @Resource
     private DcMapper DcMapper;
 
-    public List<Dc> searchAll(){
+    public List<Dc> searchAll() {
         return DcMapper.searchAll();
     }
 
-    public List<Dc> searchByCpId(int cpId){
+    public List<Dc> searchByCpId(int cpId) {
         return DcMapper.searchByCpId(cpId);
     }
 }
