@@ -126,8 +126,11 @@ public class DoctorController {
         List<PatientCase> patientCaseList = patientMapper.selectJoinList(PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
-                        .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
-                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                        .select(
+                                Cp.class, i -> !"doctorId".equals(i.getProperty())
+                                        && !"patientId".equals(i.getProperty())
+                                        && !"isPublic".equals(i.getProperty())
+                        ).select(Cp::getCpId)
                         .select(Doctor::getDoctorName)
                         .leftJoin(Cp.class, Cp::getPatientId, Patient::getPatientId)
                         .leftJoin(Doctor.class, Doctor::getDoctorId ,Cp::getDoctorId)
@@ -138,12 +141,11 @@ public class DoctorController {
         );
         Iterator<PatientCase> iterator = patientCaseList.iterator();
         List<Dc> DcList = dcMapper.selectList(Wrappers.<Dc>query().lambda().eq(Dc::getDoctorId, doctorId));
-        Iterator<Dc> iterator1 = DcList.iterator();
+
         while(iterator.hasNext()) {
             PatientCase next = iterator.next();
             Integer cpId = next.getCpId();
-            while(iterator1.hasNext()) {
-                Dc next1 = iterator1.next();
+            for (Dc next1 : DcList) {
                 Integer dc_cpId = next1.getCpId();
                 if (Objects.equals(cpId, dc_cpId)) {
                     iterator.remove();
