@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 16/04/2023 17:32:23
+ Date: 17/04/2023 16:46:00
 */
 
 SET NAMES utf8mb4;
@@ -40,7 +40,7 @@ INSERT INTO `alluser` VALUES (1, 'admin', '124a0660c90fc6e4ca14ea05dd72e33511ff1
 INSERT INTO `alluser` VALUES (2, 'admin2', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '35', '8680432785@qq.com', 1, 'http://localhost:8887/files/015e79bfcec94667b798ebd4b7acd270');
 INSERT INTO `alluser` VALUES (3, '王洛阳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '453', '973321919@hos.com', 2, 'http://localhost:8887/files/ecd9475077514ae18c9a4c3b326e3fea');
 INSERT INTO `alluser` VALUES (26, 'admin3', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '20', '666432785@qq.com', 1, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (34, '黄沙1', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '563', '288885676@hos.com', 2, 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d');
+INSERT INTO `alluser` VALUES (34, '黄沙', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '563', '288885676@hos.com', 2, 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d');
 INSERT INTO `alluser` VALUES (36, '罗艳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '35', '589995812@hos.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (39, '李军', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '52', '125225@163.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (40, '李莉', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '25', '2022255@google.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
@@ -108,7 +108,7 @@ CREATE TABLE `cp`  (
   `paraRHL` float NULL DEFAULT NULL,
   `paraRHM` float NULL DEFAULT NULL,
   PRIMARY KEY (`cpId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cp
@@ -118,7 +118,7 @@ INSERT INTO `cp` VALUES (3, 3, 42, '2022-05-05', 1, 1, 2, 3, 4, 5, 6, 7, 10, '�
 INSERT INTO `cp` VALUES (4, 3, 49, '2022-06-05', 1, 1, 2, 5, 4, 5, 6, 5, 3, '123', 8, 9, 9, 7, 3, 8, 9, 6);
 INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 0, 1, 2, 5, 4, 5, 6, 5, 3, '有所好转', 8, 9, 9, 7, 3, 8, 9, 6);
 INSERT INTO `cp` VALUES (6, 3, 42, '2023-04-16', 0, 1, 2, 5, 4, 5, 6, 5, 3, NULL, 8, 9, 9, 7, 3, 8, 9, 6);
-INSERT INTO `cp` VALUES (7, 36, 42, '2023-04-16', 1, 1, 2, 5, 4, 5, 6, 5, 3, NULL, 8, 9, 9, 7, 3, 8, 9, 6);
+INSERT INTO `cp` VALUES (7, 36, 42, '2023-04-16', 1, 1, 2, 5, 4, 5, 6, 5, 3, 'good', 8, 9, 9, 7, 3, 8, 9, 6);
 
 -- ----------------------------
 -- Table structure for dc
@@ -136,10 +136,10 @@ CREATE TABLE `dc`  (
 -- ----------------------------
 -- Records of dc
 -- ----------------------------
-INSERT INTO `dc` VALUES (1, '2023-04-11', 2, 3, NULL);
-INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 3, NULL);
-INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 3, NULL);
-INSERT INTO `dc` VALUES (4, '2023-04-14', 5, 3, NULL);
+INSERT INTO `dc` VALUES (1, '2023-04-11', 2, 34, '出院');
+INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 36, NULL);
+INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 34, NULL);
+INSERT INTO `dc` VALUES (4, '2023-04-14', 5, 39, NULL);
 
 -- ----------------------------
 -- Table structure for doctor
@@ -161,7 +161,7 @@ CREATE TABLE `doctor`  (
 -- Records of doctor
 -- ----------------------------
 INSERT INTO `doctor` VALUES (3, '王洛阳', 453, '主治医', '常年好评', 'http://localhost:8887/files/ecd9475077514ae18c9a4c3b326e3fea', '男', '973321919@hos.com');
-INSERT INTO `doctor` VALUES (34, '黄沙1', 563, '主治医生', '医学水平高', 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d', '男', '288885676@hos.com');
+INSERT INTO `doctor` VALUES (34, '黄沙', 563, '主治医生', '医学水平高', 'http://localhost:8887/files/bbfee008e7d041e785e35830c52e3d7d', '男', '288885676@hos.com');
 INSERT INTO `doctor` VALUES (36, '罗艳', 35, '主治医生', '经验丰富', 'http://localhost:8887/files/eddbc50828354a96b325f117942c1057', '女', '589995812@hos.com');
 INSERT INTO `doctor` VALUES (39, '李军', 52, '副院长', '临床经验丰富', 'http://localhost:8887/files/f36ea7ba1aba454892f735e9a697884e', '男', '125225@163.com');
 INSERT INTO `doctor` VALUES (40, '李莉', 25, NULL, NULL, NULL, '女', '2022255@google.com');
@@ -182,7 +182,7 @@ CREATE TABLE `message`  (
   `userId` int(0) NULL DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`messageId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of message
