@@ -2,18 +2,24 @@ package cn.edu.cqu.boot.controller;
 
 import cn.edu.cqu.boot.config.Result;
 import cn.edu.cqu.boot.entity.*;
+import cn.edu.cqu.boot.mapper.DcMapper;
 import cn.edu.cqu.boot.mapper.DoctorMapper;
 import cn.edu.cqu.boot.mapper.PatientMapper;
+import cn.edu.cqu.boot.service.IDcService;
 import cn.edu.cqu.boot.service.IDoctorService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/doctor")
@@ -22,10 +28,16 @@ public class DoctorController {
     private IDoctorService doctorService;
 
     @Resource
+    private IDcService dcService;
+
+    @Resource
     private DoctorMapper doctorMapper;
 
     @Resource
     private PatientMapper patientMapper;
+
+    @Resource
+    private DcMapper dcMapper;
 
     /**
      * @Description 新增医生信息，只保存于表doctor
@@ -121,7 +133,23 @@ public class DoctorController {
                         .leftJoin(Doctor.class, Doctor::getDoctorId ,Cp::getDoctorId)
                         .eq(Cp::getIsPublic, true)
                         .ne(Cp::getDoctorId, doctorId)
+//                        .notInSql(Cp::getCpId, "select cpId from dc where doctorId=3")
+
         );
+        Iterator<PatientCase> iterator = patientCaseList.iterator();
+        List<Dc> DcList = dcMapper.selectList(Wrappers.<Dc>query().lambda().eq(Dc::getDoctorId, doctorId));
+        Iterator<Dc> iterator1 = DcList.iterator();
+        while(iterator.hasNext()) {
+            PatientCase next = iterator.next();
+            Integer cpId = next.getCpId();
+            while(iterator1.hasNext()) {
+                Dc next1 = iterator1.next();
+                Integer dc_cpId = next1.getCpId();
+                if (Objects.equals(cpId, dc_cpId)) {
+                    iterator.remove();
+                }
+            }
+        }
         if (patientCaseList != null) {
             return Result.success(patientCaseList);
         } else {
