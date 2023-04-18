@@ -1,14 +1,18 @@
 <template>
     <el-card class="container" style="display: flex;flex-direction: column;position: relative;">
 
-      <div style="font-size: 18px;"><i>{{form.patientName}}</i> 详细资料</div>
+      <div style="font-size: 18px;text-align: center;"> 
+        <span>详细资料 <i>{{cp.patientName}}</i></span>  
+        <span style="margin-left:100px">诊断医生 <i>{{cp.doctorName}}</i></span>
+      </div>
       <hr style="transform: translateY(5px)"/>
 
       <div class="box-card" >
         <div class="box1">
-          <div>姓名  {{form.patientName}}</div>
-          <div>年龄  {{form.patientAge}}岁</div>
-          <div>性别  {{form.patientGender}}</div>
+          <div>姓名  {{cp.patientName}}</div>
+          <div>年龄  {{cp.patientAge}}岁</div>
+          <div>性别  {{cp.patientGender}}</div>
+          <div>日期  {{cp.date}}</div>
         </div>
         <div class="box2" v-if="cp.caseDesc !== ''">诊断报告：{{cp.caseDesc}}</div>
         <div class="box2" v-else>诊断报告：暂无报告</div>
@@ -61,10 +65,11 @@
 
       <el-divider></el-divider>
 
-      <h3 style="transform: translateY(-10px)">请在此输入诊断报告</h3>
+      <h3 style="transform: translateY(-10px)" v-if="cp.doctorName == user.name">请在此输入诊断报告</h3>
+      <h3 style="transform: translateY(-10px)" v-else-if="cp.doctorName !== user.name">请在此输入诊断意见</h3>
       <div>
         <el-input type="textarea" :rows="4" v-model="desc" class="input" placeholder="发表你的看法"></el-input>
-        <div style="text-align: right; padding: 10px 0 5px 0"><el-button type="primary" @click="saveData()">保存</el-button></div>
+        <div style="text-align: right; padding: 10px 0 5px 0"><el-button type="primary" @click="saveCpData()">保存</el-button></div>
       </div>
 
       <el-divider></el-divider>
@@ -80,7 +85,7 @@ import foot from '../assets/1.svg';
 import {toRaw} from '@vue/reactivity'
 
 export default {
-  name: "Info",
+  name: "seePatientCp",
 
   data() {
     return {
@@ -104,26 +109,10 @@ export default {
 
   created() {
     this.user = JSON.parse(sessionStorage.getItem('user'))||{}
-    this.load()
+    this.loadCp()
   },
 
   methods: {
-    load(){
-      request.get("/api/doctor/showCaseByDoctorIdPatientName",{
-        params:{
-          doctorId:this.$route.query.doctorId,
-          patientName:this.$route.query.patientName,
-        }
-      }).then(res =>{
-        this.form = res.data.records[0]
-        console.log('病历信息',this.form)
-        if(this.form.caseDesc === null || this.form.caseDesc === ""){
-          this.form.caseDesc == '暂无诊断报告'
-        }
-        this.loadCp()
-        this.init()
-      })
-    },
     draw() {
       let chartDom = document.getElementById('main');
       let myChart = echarts.init(chartDom);
@@ -174,10 +163,11 @@ export default {
     loadCp() {
       request.get("/api/cp/cpByCpId", {
         params: {
-          cpId: this.form.cpId
+          cpId: JSON.parse(sessionStorage.getItem('cpId'))
         }
       }).then(res => {
-        this.cp = res.data
+        this.cp = res.data[0]
+        console.log('cp',this.cp)
         let max1 = Math.max(this.cp.paraT1,this.cp.paraM1,this.cp.paraM2,this.cp.paraM3,this.cp.paraM4,this.cp.paraM5,this.cp.paraHL,this.cp.paraHM)
         let max2 = Math.max(this.cp.paraRT1,this.cp.paraRM1,this.cp.paraRM2,this.cp.paraRM3,this.cp.paraRM4,this.cp.paraRM5,this.cp.paraRHL,this.cp.paraRHM)
         this.max = Math.max(max1,max2)
@@ -209,10 +199,11 @@ export default {
         this.$nextTick(()=>{
           this.draw()
         })
+      this.init()
       })
     },
 
-    saveData() {
+    saveCpData() {
       if (!this.desc) {
         this.$message({
           message: "未填写内容",
@@ -368,7 +359,7 @@ export default {
     },
 
     init(){
-      request.post("/api/cp/cpByPatientId",this.form).then(res=>{
+      request.post("/api/cp/cpByPatientId",this.cp).then(res=>{
         //console.log(res)
         for(let i = 0;i < res.data.length; i++){
           this.date.push(res.data[i].date)

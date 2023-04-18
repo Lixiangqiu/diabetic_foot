@@ -143,7 +143,7 @@
            
             <div>
               诊断报告 <span>{{cp.caseDesc}}</span>
-              <span class="jumpToMedicalRecord" @click="jumpToMedicalRecord(cp.doctorId)">查看详细病历></span>
+              <span class="jumpToMedicalRecord" @click="jumpToMedicalRecord(cp.cpId)">查看详细病历></span>
             </div>
             <h3 style="margin-left:50px">医生建议</h3>
             <div v-for="dc in dcList[cp.cpId]">
@@ -286,7 +286,6 @@ export default {
   methods: {
     hanldeChangeSwitch(cp){
       cp.isPublic = this.value1[cp.cpId]
-      console.log('cp',cp)
       request.put("/api/cp/setPublic", cp).then(res => {
           console.log(res)
           if (res.code === 0) {
@@ -344,6 +343,7 @@ export default {
       this.dialogVisible2 = false
     },
     updateDoctor() {
+      console.log('form',this.form)
       request.put("/api/allUser/updateDataDoctor", this.form).then(res => {
         console.log(res)
         if (res.code === 0) {
@@ -378,7 +378,6 @@ export default {
           this.form = JSON.parse(str)
           this.userData = JSON.parse(str)
           this.$store.commit("update",this.form)
-          console.log('update',this.$store.state)
           this.userPhoto = this.$store.state.userPhoto
         } else {
           this.$message({
@@ -394,7 +393,7 @@ export default {
       request.post("/api/allUser/showOneInfo",this.form).then(res =>{
         console.log(res)
         this.form = res.data
-        this.userData = res.data
+        this.userData = JSON.parse(JSON.stringify(res.data))
       })
       if(this.form.role === 3){
         this.loadCp()
@@ -406,7 +405,6 @@ export default {
         params:{
           id:this.form.id
         }}).then(res =>{
-        console.log('cp',res)
         this.cpList = res.data
         this.cpList.forEach(item =>
           request.get("/api/cp/dcByCpId",{
@@ -422,13 +420,10 @@ export default {
       })
     },
 
-    jumpToMedicalRecord(doctorId){
+    jumpToMedicalRecord(cpId){
+      sessionStorage.setItem('cpId',cpId)
       this.$router.push({
                     path: "/detailedMedicalRecord",
-                    query: {
-                      doctorId: doctorId,
-                      patientName:this.userData.name
-                    }
                 })
     },
   }
