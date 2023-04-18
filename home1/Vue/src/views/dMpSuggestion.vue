@@ -138,7 +138,7 @@
         }).then(res =>{
             console.log(res)
           this.tableData = res.data
-          this.total = this.tableData
+          this.total = this.tableData.length
           this.tableData.forEach(item =>{
             if(item.isPublic == false){
               item.isPublic = '未公开'
