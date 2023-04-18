@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 17/04/2023 18:58:09
+ Date: 18/04/2023 19:25:37
 */
 
 SET NAMES utf8mb4;
@@ -116,8 +116,8 @@ CREATE TABLE `cp`  (
 INSERT INTO `cp` VALUES (2, 3, 42, '2022-05-06', 1, 1, 2, 3, 4, 5, 6, 7, 9, '有所恶化', 9, 8, 7, 6, 5, 5, 4, 2);
 INSERT INTO `cp` VALUES (3, 3, 42, '2022-05-05', 1, 1, 2, 3, 4, 5, 6, 7, 10, '已有很大好转', 7, 8, 9, 2, 6, 5, 4, 2);
 INSERT INTO `cp` VALUES (4, 3, 49, '2022-06-05', 1, 1, 2, 5, 4, 5, 6, 5, 3, '123', 8, 9, 9, 7, 3, 8, 9, 6);
-INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 0, 1, 2, 5, 4, 5, 6, 5, 3, '有所好转', 8, 9, 9, 7, 3, 8, 9, 6);
-INSERT INTO `cp` VALUES (6, 3, 42, '2023-04-16', 1, 1, 2, 5, 4, 5, 6, 5, 3, NULL, 8, 9, 9, 7, 3, 8, 9, 6);
+INSERT INTO `cp` VALUES (5, 3, 42, '2022-06-06', 1, 1, 2, 5, 4, 5, 6, 5, 3, '有所好转', 8, 9, 9, 7, 3, 8, 9, 6);
+INSERT INTO `cp` VALUES (6, 3, 42, '2023-04-16', 0, 1, 2, 5, 4, 5, 6, 5, 3, NULL, 8, 9, 9, 7, 3, 8, 9, 6);
 INSERT INTO `cp` VALUES (7, 36, 42, '2023-04-16', 1, 1, 2, 5, 4, 5, 6, 5, 3, 'good', 8, 9, 9, 7, 3, 8, 9, 6);
 
 -- ----------------------------
@@ -125,7 +125,7 @@ INSERT INTO `cp` VALUES (7, 36, 42, '2023-04-16', 1, 1, 2, 5, 4, 5, 6, 5, 3, 'go
 -- ----------------------------
 DROP TABLE IF EXISTS `dc`;
 CREATE TABLE `dc`  (
-  `dcId` int(0) NOT NULL,
+  `dcId` int(0) NOT NULL AUTO_INCREMENT,
   `dcDate` date NOT NULL,
   `cpId` int(0) NOT NULL,
   `doctorId` int(0) NOT NULL,
@@ -137,9 +137,10 @@ CREATE TABLE `dc`  (
 -- Records of dc
 -- ----------------------------
 INSERT INTO `dc` VALUES (1, '2023-04-11', 2, 34, '出院');
-INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 36, NULL);
-INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 34, NULL);
+INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 34, NULL);
+INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 34, '测试连接');
 INSERT INTO `dc` VALUES (4, '2023-04-14', 5, 39, NULL);
+INSERT INTO `dc` VALUES (5, '2023-04-18', 2, 39, '测试连接');
 
 -- ----------------------------
 -- Table structure for doctor
@@ -182,7 +183,7 @@ CREATE TABLE `message`  (
   `userId` int(0) NULL DEFAULT NULL,
   `photo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`messageId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 45 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of message
