@@ -192,7 +192,7 @@ public class DoctorController {
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
                         .select(Cp::getCpId, Cp::getDate, Cp::getParaT1, Cp::getParaM1, Cp::getParaM2, Cp::getParaM3,
-                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc)
+                                Cp::getParaM4, Cp::getParaM5, Cp::getParaHL, Cp::getParaHM, Cp::getCaseDesc, Cp::getIsPublic)
                         .leftJoin(Cp.class, Cp::getDoctorId, Doctor::getDoctorId)
                         .leftJoin(Patient.class, Patient::getPatientId, Cp::getPatientId)
                         .eq(Doctor::getDoctorId, doctorId)

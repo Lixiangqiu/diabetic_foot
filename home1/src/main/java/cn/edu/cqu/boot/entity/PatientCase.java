@@ -24,9 +24,11 @@ public class PatientCase {
     private String patientPhone;
     private String patientEmail;
 
+    private String doctorId;
     private String doctorName;
 
     private Integer cpId;
+    private Boolean isPublic;
     private LocalDate date;
     private Float paraT1;
     private Float paraM1;
