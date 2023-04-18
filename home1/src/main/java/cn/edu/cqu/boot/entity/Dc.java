@@ -13,10 +13,17 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@ToString
 @TableName("dc")
 public class Dc implements Serializable {
 
@@ -24,7 +31,7 @@ public class Dc implements Serializable {
     private Integer dcId;
 
     @TableField(value = "dcDate")
-    private String dcDate;
+    private LocalDate dcDate;
 
     @TableField("cpId")
     private Integer cpId;

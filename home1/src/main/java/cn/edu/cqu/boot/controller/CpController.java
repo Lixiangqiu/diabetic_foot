@@ -74,12 +74,11 @@ public class CpController {
     public Result<?> searchByCpId(@RequestParam int cpId) {
 //        Cp cpList = cpService.getById(cpId);
 //        return Result.success(cpList);
-        List<PatientCase> cpList = patientService.selectJoinList(PatientCase.class,
+        PatientCase cpList = patientService.selectJoinOne(PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
                         .select(
-                                Cp.class, i -> !"doctorId".equals(i.getProperty())
-                                        && !"patientId".equals(i.getProperty())
+                                Cp.class, i -> !"patientId".equals(i.getProperty())
                                         && !"isPublic".equals(i.getProperty())
                         ).select(Cp::getCpId)
                         .eq(Cp::getCpId, cpId)
