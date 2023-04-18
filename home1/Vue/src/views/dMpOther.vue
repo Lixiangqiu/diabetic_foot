@@ -105,12 +105,9 @@
   
     methods:{
       handleEdit(row){
-        sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
+        sessionStorage.setItem('cpId',row.cpId)
         this.$router.push({
                     path: "/seePatientCp",
-                    query: {
-                      cpId:row.cpId
-                    }
                 })
       },
   
@@ -136,6 +133,7 @@
           )
           console.log('arr',arr)
           this.tableData = arr
+          this.total = arr.length
          
         })
       },

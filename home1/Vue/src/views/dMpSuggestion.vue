@@ -105,12 +105,9 @@
   
     methods:{
       handleEdit(row){
-        // sessionStorage.setItem("patient", JSON.stringify(row))  // 缓存该病人信息
+        sessionStorage.setItem('cpId',row.cpId)
         this.$router.push({
                     path: "/seePatientCp",
-                    query: {
-                      cpId:row.cpId
-                    }
                 })
       },
   
@@ -135,14 +132,15 @@
         }).then(res =>{
             console.log(res)
           this.tableData = res.data
+          this.total = 3
           this.tableData.forEach(item =>{
             if(item.caseDesc === null || item.caseDesc === ""){
               item.caseDesc = "暂无诊断报告"
             }
           })
-          this.total=res.data.total
-          this.currentPage=res.data.current
-          this.pageSize=res.data.size
+          // this.total=res.data.total
+          // this.currentPage=res.data.current
+          // this.pageSize=res.data.size
         })
       }
     }
