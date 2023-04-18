@@ -40,7 +40,7 @@ public class DcController {
     public Result<?> findDcPage(@RequestParam Integer doctorId) {
         List<DoctorCon> doctorConList = dcService.selectJoinList(DoctorCon.class,
                 new MPJLambdaWrapper<Dc>()
-                        .select(Dc::getDcId, Dc::getCpId, Dc::getDcDate, Dc::getDoctorCon)
+                        .select(Dc::getDcId, Dc::getCpId, Dc::getDcDate, Dc::getDoctorCon, Dc::getDcId)
                         .eq(Dc::getDoctorId, doctorId)
                         .select(Cp::getDate, Cp::getCaseDesc, Cp::getIsPublic)
                         .selectAll(Patient.class)
