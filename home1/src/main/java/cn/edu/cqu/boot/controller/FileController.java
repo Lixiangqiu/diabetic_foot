@@ -54,9 +54,11 @@ public class FileController {
     }
 
     /**
-     * 下载接口
-     * @param flag
-     * @param response
+     * @Description 文件下载
+     * @Param [flag, response]
+     * @return void
+     * @Date 2023/4/18 16:15
+     * @Auther WangSanmu
      */
     @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response) {

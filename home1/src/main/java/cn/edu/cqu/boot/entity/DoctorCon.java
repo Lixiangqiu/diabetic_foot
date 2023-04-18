@@ -23,11 +23,13 @@ public class DoctorCon {
     private String patientPhone;
     private String patientEmail;
 
+    private String doctorId;
     private String doctorName;
 
     private Integer cpId;
     private LocalDate date;
     private String caseDesc;
+    private Boolean isPublic;
 
     private Integer dcId;
     private LocalDate dcDate;

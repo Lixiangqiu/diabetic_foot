@@ -78,8 +78,7 @@ public class CpController {
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
                         .select(
-                                Cp.class, i -> !"doctorId".equals(i.getProperty())
-                                        && !"patientId".equals(i.getProperty())
+                                Cp.class, i -> !"patientId".equals(i.getProperty())
                                         && !"isPublic".equals(i.getProperty())
                         ).select(Cp::getCpId)
                         .eq(Cp::getCpId, cpId)
