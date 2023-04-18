@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
@@ -181,6 +182,7 @@ public class DoctorController {
             return Result.error(1, "没有数据");
         }
     }
+
 
     @GetMapping("/showCaseByDoctorIdPatientName") //根据医生ID和病人名字搜索某个病人的所有病历
     public Result<?> showCaseByDIdPName(@RequestParam int doctorId,
