@@ -40,9 +40,9 @@ public class DoctorController {
     private DcMapper dcMapper;
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<Doctor>
      * @Description 新增医生信息，只保存于表doctor
      * @Param [doctor]
-     * @return cn.edu.cqu.boot.config.Result<Doctor>
      * @Date 2023/4/17 14:46
      * @Auther WangSanmu
      */
@@ -53,9 +53,9 @@ public class DoctorController {
     }
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<doctor>
      * @Description 修改更新医生信息，只作用与doctor表
      * @Param [doctor]
-     * @return cn.edu.cqu.boot.config.Result<doctor>
      * @Date 2023/4/17 14:50
      * @Auther WangSanmu
      */
@@ -66,9 +66,9 @@ public class DoctorController {
     }
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<msg>
      * @Description 删除医生信息，只作用于doctor表
      * @Param [id]
-     * @return cn.edu.cqu.boot.config.Result<msg>
      * @Date 2023/4/17 14:53
      * @Auther WangSanmu
      */
@@ -133,16 +133,20 @@ public class DoctorController {
                         ).select(Cp::getCpId)
                         .select(Doctor::getDoctorName)
                         .leftJoin(Cp.class, Cp::getPatientId, Patient::getPatientId)
-                        .leftJoin(Doctor.class, Doctor::getDoctorId ,Cp::getDoctorId)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId, Cp::getDoctorId)
                         .eq(Cp::getIsPublic, true)
                         .ne(Cp::getDoctorId, doctorId)
 //                        .notInSql(Cp::getCpId, "select cpId from dc where doctorId=3")
 
         );
+
+        if (patientCaseList == null || patientCaseList.isEmpty()) {
+            return Result.error(1, "没有公开病例");
+        }
         Iterator<PatientCase> iterator = patientCaseList.iterator();
         List<Dc> DcList = dcMapper.selectList(Wrappers.<Dc>query().lambda().eq(Dc::getDoctorId, doctorId));
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             PatientCase next = iterator.next();
             Integer cpId = next.getCpId();
             for (Dc next1 : DcList) {
@@ -152,10 +156,10 @@ public class DoctorController {
                 }
             }
         }
-        if (patientCaseList != null) {
+        if (!patientCaseList.isEmpty()) {
             return Result.success(patientCaseList);
         } else {
-            return Result.error(1, "没有数据");
+            return Result.error(2, "公开病例为空，您已对所有公开病例提出建议");
         }
     }
 
