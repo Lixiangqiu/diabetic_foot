@@ -133,6 +133,11 @@
           )
           console.log('arr',arr)
           this.tableData = arr
+          this.tableData.forEach(item =>{
+            if(item.caseDesc === null || item.caseDesc === ""){
+              item.caseDesc = "暂无诊断报告"
+            }
+          })
           this.total = arr.length
          
         })

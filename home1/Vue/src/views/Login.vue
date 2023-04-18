@@ -76,6 +76,7 @@ export default {
 
   created(){
     sessionStorage.removeItem("cpId")
+    sessionStorage.removeItem("dcId")
     sessionStorage.removeItem("user")
   },
   methods:{

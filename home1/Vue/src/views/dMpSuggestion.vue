@@ -42,11 +42,16 @@
           </el-table-column>
           <el-table-column
               align="center"
+              prop="isPublic"
+              label="公开情况">
+          </el-table-column>
+          <el-table-column
+              align="center"
               fixed="right"
               label="操作"
               width="150px">
             <template #default="scope">
-              <el-button type="text"  @click="handleEdit(scope.row)">查看足生理参数</el-button>
+              <el-button type="text"  @click="handleEdit(scope.row)" :disabled = "scope.row.isPublic == '未公开'" >查看足生理参数</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -106,6 +111,7 @@
     methods:{
       handleEdit(row){
         sessionStorage.setItem('cpId',row.cpId)
+        sessionStorage.setItem('dcId',row.dcId)
         this.$router.push({
                     path: "/seePatientCp",
                 })
@@ -132,12 +138,15 @@
         }).then(res =>{
             console.log(res)
           this.tableData = res.data
-          this.total = 3
+          this.total = this.tableData
           this.tableData.forEach(item =>{
-            if(item.caseDesc === null || item.caseDesc === ""){
-              item.caseDesc = "暂无诊断报告"
+            if(item.isPublic == false){
+              item.isPublic = '未公开'
+            }else {
+              item.isPublic = '公开'
             }
           })
+          
           // this.total=res.data.total
           // this.currentPage=res.data.current
           // this.pageSize=res.data.size

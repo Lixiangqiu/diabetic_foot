@@ -20,7 +20,7 @@
         <div class="box1" v-for="conList in cp.doctorCon">
           <div>医生姓名：{{conList.doctorName}} </div>
           <div>医生意见： {{conList.doctorCon}}</div>
-        </div>
+        </div> 
       </div>
 
       <el-divider style="transform: translateY(-5px)"></el-divider>
@@ -166,7 +166,9 @@ export default {
           cpId: JSON.parse(sessionStorage.getItem('cpId'))
         }
       }).then(res => {
-        this.cp = res.data[0]
+        console.log('res',res)
+        this.cp = res.data
+        console.log('cp',this.cp)
         let max1 = Math.max(this.cp.paraT1,this.cp.paraM1,this.cp.paraM2,this.cp.paraM3,this.cp.paraM4,this.cp.paraM5,this.cp.paraHL,this.cp.paraHM)
         let max2 = Math.max(this.cp.paraRT1,this.cp.paraRM1,this.cp.paraRM2,this.cp.paraRM3,this.cp.paraRM4,this.cp.paraRM5,this.cp.paraRHL,this.cp.paraRHM)
         this.max = Math.max(max1,max2)
@@ -198,9 +200,8 @@ export default {
             params:{
               id:JSON.parse(sessionStorage.getItem('cpId'))
             }}).then(res =>{
-            console.log('Con',res)
             this.cp.doctorCon = res.data
-            
+            console.log('cp',this.cp.doctorCon,typeof this.cp.doctorCon,this.cp.doctorCon.length)
           })
         this.$nextTick(()=>{
           this.draw()
@@ -366,7 +367,7 @@ export default {
 
     init(){
       request.post("/api/cp/cpByPatientId",this.cp).then(res=>{
-        //console.log(res)
+        // console.log('date',res)
         for(let i = 0;i < res.data.length; i++){
           this.date.push(res.data[i].date)
           this.paraR.push(res.data[i].paraRT1,res.data[i].paraRM1,res.data[i].paraRM2,res.data[i].paraRM3,res.data[i].paraRM4,res.data[i].paraRM5,res.data[i].paraRHL,res.data[i].paraRHM)
