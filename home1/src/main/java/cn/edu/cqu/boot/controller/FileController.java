@@ -24,10 +24,11 @@ public class FileController {
     private static final String ip = "http://localhost";
 
     /**
-     * 上传接口
-     * @param file
-     * @return
-     * @throws IOException
+     * @Description 上传图片
+     * @Param [file]
+     * @return cn.edu.cqu.boot.config.Result<url>
+     * @Date 2023/4/18 15:22
+     * @Auther WangSanmu
      */
     @PostMapping("/upload")  //图片上传
     public Result<?> upload(MultipartFile file) throws IOException {

@@ -74,7 +74,7 @@ public class CpController {
     public Result<?> searchByCpId(@RequestParam int cpId) {
 //        Cp cpList = cpService.getById(cpId);
 //        return Result.success(cpList);
-        List<PatientCase> cpList = patientService.selectJoinList(PatientCase.class,
+        PatientCase cpList = patientService.selectJoinOne(PatientCase.class,
                 new MPJLambdaWrapper<Patient>()
                         .selectAll(Patient.class)
                         .select(
