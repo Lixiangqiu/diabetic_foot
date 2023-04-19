@@ -59,7 +59,7 @@ public class DcController {
 
     /**
      * @return cn.edu.cqu.boot.config.Result<Dc>
-     * @Description 新增dc，保存到数据库
+     * @Description 新增或更新dc，保存到数据库
      * @Param [dc]
      * @Date 2023/4/18 17:09
      * @Auther WangSanmu
@@ -71,15 +71,14 @@ public class DcController {
                         .eq(Dc::getDoctorId, dc.getDoctorId())
                         .eq(Dc::getCpId, dc.getCpId())
         );
-        if (localDc == null && dc.getDcId() == null) {
-            dc.setDcDate(LocalDate.now());
+        dc.setDcDate(LocalDate.now());
+        if (localDc == null) {
+            dc.setDcId(null);
             dcService.save(dc);
-            return Result.success(dc);
         } else {
-            dc.setDcDate(LocalDate.now());
             dcService.updateById(dc);
-            return Result.success(dc);
         }
+        return Result.success(dc);
     }
 
 }

@@ -1,6 +1,7 @@
 package cn.edu.cqu.boot.controller;
 
 
+import cn.edu.cqu.boot.config.FileDelete;
 import cn.edu.cqu.boot.config.Result;
 import cn.edu.cqu.boot.config.Hash;
 import cn.edu.cqu.boot.entity.*;
@@ -53,29 +54,33 @@ public class AllUserController {
     private static final String PATH = file.getPath();
 
     /**
-     * @return cn.edu.cqu.boot.config.Result<?>
+     * @return cn.edu.cqu.boot.config.Result<OnInfo / AllUser>
      * @Description 个人信息展示
      * @Param [user]
-     * @Date 2023/4/12 15:32
+     * @Date 2023/4/19 16:01
      * @Auther WangSanmu
      */
     @PostMapping(value = "/showOneInfo")
     public Result<?> showOneInfo(@RequestBody AllUser user) {
-//        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userid));
+
+        AllUser userRes;
+        userRes = userService.getById(user.getId());
+        userRes.setPassword(null);
         System.err.println("paraR");
-        OneInfo oneInfo = new OneInfo();
-        if (user.getRole() == 2) {//展示医生个人信息
-            oneInfo = allUserMapper.selectJoinOne(OneInfo.class,
+
+        OneInfo oneInfo;
+        if (userRes.getRole() == 2) {//判断展示医生个人信息
+            oneInfo = userService.selectJoinOne(OneInfo.class,
                     new MPJLambdaWrapper<AllUser>()
                             .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
                             .select(AllUser::getId)
-                            .select(Doctor::getDoctorPosition, Doctor::getDoctorDes)
+                            .select(Doctor::getDoctorPosition, Doctor::getDoctorDes, Doctor::getDoctorPic)
                             .leftJoin(Doctor.class, Doctor::getDoctorId, AllUser::getId)
                             .eq(AllUser::getId, user.getId())
             );
             return Result.success(oneInfo);
-        } else if (user.getRole() == 3) {//展示病人个人信息
-            oneInfo = allUserMapper.selectJoinOne(OneInfo.class,
+        } else if (userRes.getRole() == 3) {//判断展示病人个人信息
+            oneInfo = userService.selectJoinOne(OneInfo.class,
                     new MPJLambdaWrapper<AllUser>()
                             .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
                             .select(AllUser::getId)
@@ -86,122 +91,166 @@ public class AllUserController {
             return Result.success(oneInfo);
         }
 
-        return Result.success(user);
+        // 判断展示管理员信息
+        return Result.success(userRes);
     }
 
-    @PostMapping("/saveData")   //管理员新增用户保存
-    public Result<?> saveData(@RequestBody AllUser user) throws Exception {
-        if (user.getPassword() == null) {
-            user.setPassword(Hash.encode("e10adc3949ba59abbe56e057f20f883e"));
-        }
-        user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
-        user.setPassword(Hash.encode(user.getPassword()));
-        userService.save(user);
-        System.err.println(user.getId());
-        if (user.getRole() == 2) {  //同步更新医生表
-            Doctor d = new Doctor();
-            d.setDoctorId(user.getId());
-//            d.setRole(user.getRole());
-            //System.err.println(d.getDoctorId());
-            d.setDoctorName(user.getName());
-            doctorService.save(d);
-        } else if (user.getRole() == 3) {  //同步更新病人表
-            Patient p = new Patient();
-            p.setPatientId(user.getId());
-            p.setPatientName(user.getName());
-            patientService.save(p);
-        }
-        System.err.println(user);
-        return Result.success();
-    }
 
-    @PostMapping("/createDoctorData")   //管理员新增用户保存
-    public Result<?> createDoctorData(@RequestBody OneInfo info) throws Exception {
+    /**
+     * @Description 管理员新增用户(allUser, doctor, patient)
+     * @Param [info]
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Date 2023/4/19 17:02
+     * @Auther WangSanmu
+     */
+    @PostMapping("/saveData")
+    public Result<?> saveData(@RequestBody OneInfo info) throws Exception {
+
+        // 新增allUser记录
         AllUser user = new AllUser();
+
+        user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
+        user.setRole(info.getRole());
+
         if (info.getPassword() == null) {
             user.setPassword(Hash.encode("e10adc3949ba59abbe56e057f20f883e"));
         } else {
             user.setPassword(Hash.encode(info.getPassword()));
         }
-        user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
-        user.setName(info.getDoctorName());
-        user.setGender(info.getDoctorGender());
-        user.setAge(info.getDoctorAge());
-        user.setEmail(info.getDoctorEmail());
-        user.setRole(info.getRole());
-//        user.setPassword(Hash.encode(info.getPassword()));
+
+        user.setName(info.getName());
+        user.setGender(info.getGender());
+        user.setAge(info.getAge());
+        user.setEmail(info.getEmail());
+
         userService.save(user);
-        System.err.println(user.getId());
-        if (user.getRole() == 2) {  //同步更新医生表
+        System.err.println(info.getId());
+
+        // 判断新增doctor记录
+        if (info.getRole() == 2) {
+
             Doctor d = new Doctor();
+
             d.setDoctorId(user.getId());
-//            d.setRole(user.getRole());
-            //System.err.println(d.getDoctorId());
             d.setDoctorName(user.getName());
-            d.setDoctorPic(info.getDoctorPic());
-            d.setDoctorPosition(info.getDoctorPosition());
+            d.setDoctorGender(user.getGender());
             d.setDoctorAge(user.getAge());
             d.setDoctorEmail(user.getEmail());
-            d.setDoctorGender(user.getGender());
+
+            d.setDoctorPic(info.getDoctorPic());
+            d.setDoctorPosition(info.getDoctorPosition());
+            d.setDoctorDes(info.getDoctorDes());
+
             doctorService.save(d);
+        } else if (info.getRole() == 3) { //判断新增patient记录
+
+            Patient p = new Patient();
+
+            p.setPatientId(user.getId());
+            p.setPatientName(user.getName());
+            p.setPatientGender(user.getGender());
+            p.setPatientAge(user.getAge());
+            p.setPatientEmail(user.getEmail());
+
+            p.setPatientAddress(info.getPatientAddress());
+            p.setPatientPhone(info.getPatientPhone());
+
+            patientService.save(p);
         }
-        System.err.println(user);
+        System.err.println(info);
+
         return Result.success();
     }
 
-    @PutMapping("/updateDataManager") //管理员更新信息
+
+    /**
+     * @Description 管理员修改自身个人信息
+     * @Param [user]
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Date 2023/4/19 17:42
+     * @Auther WangSanmu
+     */
+    @PutMapping("/updateDataManager")
     public Result<?> updateDataManager(@RequestBody AllUser user) {
         userService.updateById(user);
         return Result.success();
     }
 
 
-    @PutMapping("/updateDataPatient") //病人更新信息
+    /**
+     * @Description 管理员或病人 修改病人个人信息
+     * @Param [oneInfo]
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Date 2023/4/19 17:51
+     * @Auther WangSanmu
+     */
+    @PutMapping("/updateDataPatient")
     public Result<?> updateDataPatient(@RequestBody OneInfo oneInfo) {
-        Patient res = patientMapper.selectOne(Wrappers.<Patient>query().lambda().eq(Patient::getPatientId, oneInfo.getId()));
+
+        // 更新表patient
+        Patient res = patientService.getById(oneInfo.getId());
+
         res.setPatientName(oneInfo.getName());
         res.setPatientEmail(oneInfo.getEmail());
         res.setPatientGender(oneInfo.getGender());
         res.setPatientAge(oneInfo.getAge());
         res.setPatientAddress(oneInfo.getPatientAddress());
         res.setPatientPhone(oneInfo.getPatientPhone());
+
         patientService.updateById(res);
-        AllUser res1 = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
+
+        // 更新表allUser
+        AllUser res1 = userService.getById(oneInfo.getId());
+
         res1.setName(oneInfo.getName());
         res1.setAge(oneInfo.getAge());
+        FileDelete.deleteFile(res1.getPhoto());
         res1.setPhoto(oneInfo.getPhoto());
         res1.setPassword(oneInfo.getPassword());
         res1.setEmail(oneInfo.getEmail());
         res1.setGender(oneInfo.getGender());
+
         userService.updateById(res1);
+
         return Result.success();
     }
 
 
-    @PutMapping("/updateDataDoctor") //医生更新信息
+    /**
+     * @Description 管理员或医生 修改医生个人信息
+     * @Param [oneInfo]
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Date 2023/4/19 18:23
+     * @Auther WangSanmu
+     */
+    @PutMapping("/updateDataDoctor")
     public Result<?> updateDataDoctor(@RequestBody OneInfo oneInfo) {
-        oneInfo.doctor();
-        AllUser res_user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
-        res_user.setName(oneInfo.getName());
-        res_user.setEmail(oneInfo.getEmail());
-        res_user.setAge(oneInfo.getAge());
-        res_user.setGender(oneInfo.getGender());
-//        res_user.setPhoto(oneInfo.getPhoto());
-        Doctor res_doctor = doctorMapper.selectOne(Wrappers.<Doctor>query().lambda().eq(Doctor::getDoctorId, oneInfo.getId()));
-        res_doctor.setDoctorAge(oneInfo.getAge());
-        res_doctor.setDoctorName(oneInfo.getName());
-        res_doctor.setDoctorPosition(oneInfo.getDoctorPosition());
-        res_doctor.setDoctorPic(oneInfo.getDoctorPic());
-        userService.updateById(res_user);
-        doctorService.updateById(res_doctor);
-//        AllUser res1 = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, oneInfo.getId()));
-//        res1.setName(oneInfo.getName());
-//        res1.setAge(oneInfo.getAge());
-//        res1.setPhoto(oneInfo.getPhoto());
-//        res1.setPassword(oneInfo.getPassword());
-//        res1.setEmail(oneInfo.getEmail());
-//        res1.setGender(oneInfo.getGender());
-//        userService.updateById(res1);
+
+        // 修改allUser表
+        AllUser res = userService.getById(oneInfo.getId());
+
+        res.setName(oneInfo.getName());
+        res.setEmail(oneInfo.getEmail());
+        res.setAge(oneInfo.getAge());
+        res.setGender(oneInfo.getGender());
+        FileDelete.deleteFile(res.getPhoto());
+        res.setPhoto(oneInfo.getPhoto());
+        userService.updateById(res);
+
+        // 修改doctor表
+        Doctor res1 = doctorService.getById(oneInfo.getId());
+
+        res1.setDoctorGender(res.getGender());
+        res1.setDoctorAge(res.getAge());
+        res1.setDoctorName(res.getName());
+        res1.setDoctorEmail(res.getEmail());
+
+        res1.setDoctorPosition(oneInfo.getDoctorPosition());
+        res1.setDoctorPic(oneInfo.getDoctorPic());
+        res1.setDoctorDes(oneInfo.getDoctorDes());
+
+        doctorService.updateById(res1);
+
         return Result.success();
     }
 

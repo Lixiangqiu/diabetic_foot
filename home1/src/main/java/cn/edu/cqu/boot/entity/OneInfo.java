@@ -22,26 +22,11 @@ public class OneInfo extends AllUser implements Serializable{
     private Integer role;
     private String photo;
 
-
-    private Integer doctorId;
-    private String doctorName;
-    private Integer doctorAge;
-    private String doctorGender;
-    private String doctorEmail;
     private String doctorPosition;
     private String doctorDes;
     private String doctorPic;
 
     private String patientAddress;
     private String patientPhone;
-
-    public void doctor(){
-        this.id = this.doctorId;
-        this.age = this.doctorAge;
-        this.gender = this.doctorGender;
-        this.email = this.doctorEmail;
-        this.name = this.doctorName;
-        this.photo = this.doctorPic;
-    }
 
 }
