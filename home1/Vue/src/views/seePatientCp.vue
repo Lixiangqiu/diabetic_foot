@@ -62,7 +62,17 @@
         <div id="main1" style="width:400px;height:400px"></div>
         <div id="main2" style="width:400px;height:400px"></div>
       </div>
-
+      <el-upload
+          ref="upload"
+          action="/wm/upload"
+          :show-file-list="false"
+          :on-change="readExcel"
+          :auto-upload="false"
+          style="display: inline-block"
+      >
+       转换数组
+    </el-upload>
+      <div id="main3"  style="width:900px;height:600px;margin: 10px auto"></div>
       <el-divider></el-divider>
 
       <h3 style="transform: translateY(-10px)" v-if="cp.doctorName == user.name">请在此输入诊断报告</h3>
@@ -85,7 +95,8 @@ import request from "@/utils/request";
 import * as echarts from "echarts";
 import $ from "jquery";
 import foot from '../assets/1.svg';
-import {toRaw} from '@vue/reactivity'
+import {toRaw} from '@vue/reactivity';
+import XLSX from "xlsx/dist/xlsx.full.min";
 
 export default {
   name: "seePatientCp",
@@ -117,51 +128,24 @@ export default {
   },
 
   methods: {
-    draw() {
-      let chartDom = document.getElementById('main');
-      let myChart = echarts.init(chartDom);
-      let option;
-      let that = this
-      $.get(foot, function (svg) {
-        echarts.registerMap('foot', {svg: svg});
-        option = {
-          tooltip: {},
-          title: {
-            text:'足底压力示意图',
-            x:'center',
-          },
-          visualMap: {
-            left: 70,
-            bottom: '30%',
-            min: 0,
-            max: 10,
-            orient: 'vertical',
-            text: ['','压力大小'],
-            realtime: true,
-            calculable: true,
-            inRange: {
-              color: ['#FFF500', '#FFAA00','#FF4900','#F5001D']
-            }
-          },
-          series: [
-            {
-              name: 'foot',
-              type: 'map',
-              map: 'foot',
-              roam: true,
-              emphasis: {
-                label: {
-                  show: false
-                }
-              },
-              selectedMode: false,
-              data: that.list
-            }
-          ]
-        };
-        myChart.setOption(option);
-      });
-      option && myChart.setOption(option);
+
+    readExcel(file){ //此处接受的file，为文件上传的file
+      var reader = new FileReader();
+      //以二进制方式读取文件
+      reader.readAsBinaryString(file.raw);
+      reader.onload = (e) => {
+          //获取文件数据
+          const data = e.target.result;//e.target.value  
+          //XLSX读取文件
+          const wb = XLSX.read(data, { type: "binary" });
+          //获取第一张表
+          const wsname = wb.SheetNames[0];
+          const ws = wb.Sheets[wsname];
+          var result = XLSX.utils.sheet_to_json(ws, { header: 1 });
+          // this.dataDetail(result)
+          result.shift()
+          this.draw3(result.reverse())
+      };
     },
 
     loadCp() {
@@ -202,8 +186,10 @@ export default {
         //console.log(this.cp.paraHL)
         this.$nextTick(()=>{
           this.draw()
+          // this.draw3()
         })
       this.init()
+      
       })
     },
 
@@ -393,6 +379,176 @@ export default {
       option && myChart.setOption(option);
     },
 
+    draw() {
+      let chartDom = document.getElementById('main');
+      let myChart = echarts.init(chartDom);
+      let option;
+      let that = this
+      $.get(foot, function (svg) { 
+        echarts.registerMap('foot', {svg: svg});
+        option = {
+          tooltip: {},
+          title: {
+            text:'足底压力示意图',
+            x:'center',
+          },
+          visualMap: {
+            left: 70,
+            bottom: '30%',
+            min: 0,
+            max: 10,
+            orient: 'vertical',
+            text: ['','压力大小'],
+            realtime: true,
+            calculable: true,
+            inRange: {
+              color: ['#FFF500', '#FFAA00','#FF4900','#F5001D']
+            }
+          },
+          series: [
+            {
+              name: 'foot',
+              type: 'map',
+              map: 'foot',
+              roam: true,
+              emphasis: {
+                label: {
+                  show: false
+                }
+              },
+              selectedMode: false,
+              data: that.list
+            }
+          ]
+        };
+        myChart.setOption(option);
+      });
+      option && myChart.setOption(option);
+    },
+
+   
+    draw3(result){
+      console.log('result',result)
+      var chartDom = document.getElementById('main3');
+      var myChart = echarts.init(chartDom);
+      var option;
+      var url = result
+      $.get('', function (data) {
+        console.log('data',result)
+        let date = result
+        myChart.setOption(
+          (option = {
+            title: {
+              text: '足部时间积分表',
+              left: '1%'
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            grid: {
+              left: '5%',
+              right: '15%',
+              bottom: '10%'
+            },
+            xAxis: {
+              data: date.map(function (item) {
+                return item[0];
+              })
+            },
+            yAxis: {},
+            toolbox: {
+              right: 10,
+              feature: {
+                dataZoom: {
+                  yAxisIndex: 'none'
+                },
+                restore: {},
+                saveAsImage: {}
+              }
+            },
+            dataZoom: [
+              {
+                startValue: date[0][0],
+                endValue: date[100][0]
+              },
+              {
+                type: 'inside'
+              }
+            ],
+            visualMap: {
+              top: 50,
+              right: 10,
+              pieces: [
+                {
+                  gt: 0,
+                  lte: 50,
+                  color: '#93CE07'
+                },
+                {
+                  gt: 50,
+                  lte: 100,
+                  color: '#FBDB0F'
+                },
+                {
+                  gt: 100,
+                  lte: 150,
+                  color: '#FC7D02'
+                },
+                {
+                  gt: 150,
+                  lte: 200,
+                  color: '#FD0100'
+                },
+                {
+                  gt: 200,
+                  lte: 300,
+                  color: '#AA069F'
+                },
+                {
+                  gt: 300,
+                  color: '#AC3B2A'
+                }
+              ],
+              outOfRange: {
+                color: '#999'
+              }
+            },
+            series: {
+              name: '足部压力时间积分表',
+              type: 'line',
+              data: date.map(function (item) {
+                return item[1];
+              }),
+              markLine: {
+                silent: true,
+                lineStyle: {
+                  color: '#333'
+                },
+                data: [
+                  {
+                    yAxis: 50
+                  },
+                  {
+                    yAxis: 100
+                  },
+                  {
+                    yAxis: 150
+                  },
+                  {
+                    yAxis: 200
+                  },
+                  {
+                    yAxis: 300
+                  }
+                ]
+              }
+            }
+          })
+        );
+      });
+
+      option && myChart.setOption(option);
+    },
     init(){
       request.post("/api/cp/cpByPatientId",this.cp).then(res=>{
         //console.log(res)

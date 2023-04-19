@@ -13,27 +13,27 @@
         <el-table-column
             align="center"
             sortable
-            prop="doctorId"
+            prop="id"
             label="ID号" width="80px">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="doctorName"
+            prop="name"
             label="姓名">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="doctorGender"
+            prop="gender"
             label="性别">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="doctorAge"
+            prop="age"
             label="年龄">
         </el-table-column>
         <el-table-column
             align="center"
-            prop="doctorEmail"
+            prop="email"
             label="Email">
         </el-table-column>
         <el-table-column
@@ -80,16 +80,16 @@
       <el-dialog title="更新信息" v-model="dialogVisible" width="30%">
         <el-form :model="form" label-width="120px" :rules="rules">
           <el-form-item label="名称">
-            <el-input v-model="form.doctorName" style="width:80%"></el-input>
+            <el-input v-model="form.name" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="性别" prop="doctorGender">
-            <el-input v-model="form.doctorGender" style="width:80%"></el-input>
+          <el-form-item label="性别" prop="gender">
+            <el-input v-model="form.gender" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="年龄" prop="doctorAge">
-            <el-input v-model="form.doctorAge" style="width:80%"></el-input>
+          <el-form-item label="年龄" prop="age">
+            <el-input v-model="form.age" style="width:80%"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" prop="doctorEmail">
-            <el-input v-model="form.doctorEmail" style="width:80%"></el-input>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" style="width:80%"></el-input>
           </el-form-item>
           <el-form-item label="职位" prop="doctorPosition">
             <el-input v-model="form.doctorPosition" style="width:80%"></el-input>
@@ -133,13 +133,13 @@ export default {
       tableData: [],
       user:{},
       rules: {
-        doctorGender: [
+        gender: [
           { required: true, message: '请正确输入性别', type: "enum", enum: ['男', '女'],trigger: 'blur' },
         ],
-        doctorAge: [
+        age: [
           { required: true, message: '请正确输入年龄', pattern : /^([1-9]|[1-9][0-9]|[1][0-9][0-9])$/g, type : "string", trigger: 'blur' },
         ],
-        doctorEmail: [
+        email: [
           { required: true, message: '请正确输入邮箱', type: 'email', trigger: 'blur' },
         ],
         role: [
@@ -164,7 +164,7 @@ export default {
     },
 
     saveData(){
-      if(this.form.doctorId){
+      if(this.form.id){
         console.log('yes')
         request.put("/api/allUser/updateDataDoctor",this.form).then(res =>{
           console.log(res)
@@ -188,7 +188,7 @@ export default {
           
         })
       }else {
-        request.post("/api/allUser/createDoctorData", this.form).then(res => {
+        request.post("/api/allUser/saveData", this.form).then(res => {
           console.log(res)
           if(res.code === 0){
             this.$message({

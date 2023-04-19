@@ -304,7 +304,6 @@ export default {
     },
     handleSelect(){
       this.dialogVisible2 = true
-      this.$refs['upload'].clearFiles()
       
       
     },
