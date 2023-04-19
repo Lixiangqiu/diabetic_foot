@@ -306,9 +306,17 @@ public class AllUserController {
 //        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "2").like(AllUser::getName, search));
 //        Doctor doctor = doctorMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
 //                eq(AllUser::getPassword, Hash.encode(user.getPassword())));
-        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize),
-                Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
-//        IPage<OneInfo> oneInfoIPage =
+//        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize),
+//                Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+
+        IPage<OneInfo> doctorIPage = userService.selectJoinListPage(new Page<>(pageNum, pageSize), OneInfo.class,
+                new MPJLambdaWrapper<AllUser>()
+                        .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                        .select(Doctor::getDoctorPosition, Doctor::getDoctorPic, Doctor::getDoctorDes)
+                        .leftJoin(Doctor.class, Doctor::getDoctorId, AllUser::getId)
+                        .eq(AllUser::getRole, 2)
+                        .like(AllUser::getName, search)
+        );
         System.out.println(doctorIPage);
         return Result.success(doctorIPage);
     }
