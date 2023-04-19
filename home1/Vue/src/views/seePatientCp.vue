@@ -69,7 +69,10 @@
       <h3 style="transform: translateY(-10px)" v-else-if="cp.doctorName !== user.name">请在此输入诊断意见</h3>
       <div>
         <el-input type="textarea" :rows="4" v-model="desc" class="input" placeholder="发表你的看法"></el-input>
-        <div style="text-align: right; padding: 10px 0 5px 0"><el-button type="primary" @click="saveCpData()">保存</el-button></div>
+        <div style="text-align: right; padding: 10px 0 5px 0">
+          <el-button type="primary" @click="saveCpData()" v-if="cp.doctorName == user.name">保存诊断报告</el-button>
+          <el-button type="primary" @click="saveDcData()" v-else-if="cp.doctorName !== user.name">保存诊断意见</el-button>
+        </div>
       </div>
 
       <el-divider></el-divider>
@@ -104,6 +107,7 @@ export default {
       ava:'',
       max:'',
       user:'',
+      dc:{}
     }
   },
 
@@ -166,7 +170,7 @@ export default {
           cpId: JSON.parse(sessionStorage.getItem('cpId'))
         }
       }).then(res => {
-        this.cp = res.data[0]
+        this.cp = res.data
         console.log('cp',this.cp)
         let max1 = Math.max(this.cp.paraT1,this.cp.paraM1,this.cp.paraM2,this.cp.paraM3,this.cp.paraM4,this.cp.paraM5,this.cp.paraHL,this.cp.paraHM)
         let max2 = Math.max(this.cp.paraRT1,this.cp.paraRM1,this.cp.paraRM2,this.cp.paraRM3,this.cp.paraRM4,this.cp.paraRM5,this.cp.paraRHL,this.cp.paraRHM)
@@ -213,6 +217,37 @@ export default {
       }else {
         this.cp.caseDesc = this.desc
         request.post("/api/cp/updateCaseDesc", this.cp).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              type: "success",
+              message: "保存成功"
+            })
+            this.loadCp()
+          } else {
+            this.$message({
+              type: "error",
+              message: res.msg
+            })
+          }
+        })
+        this.desc = ''
+      }
+    },
+
+    saveDcData() {
+      if (!this.desc) {
+        this.$message({
+          message: "未填写内容",
+          type: "warning"
+        });
+        return;
+      }else {
+        this.dc.dcId = JSON.parse(sessionStorage.getItem('dcId'))
+        this.dc.doctorId = this.user.id
+        this.dc.cpId = this.cp.cpId
+        this.dc.doctorCon = this.desc
+        console.log('dc',this.dc)
+        request.post("/api/dc/newDoctorCon", this.dc).then(res => {
           if (res.code === 0) {
             this.$message({
               type: "success",

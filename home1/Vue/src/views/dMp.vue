@@ -37,6 +37,11 @@
         </el-table-column>
         <el-table-column
             align="center"
+            prop="isPublic"
+            label="公开情况">
+        </el-table-column>
+        <el-table-column
+            align="center"
             fixed="right"
             label="操作"
             width="150px">
@@ -125,10 +130,16 @@ export default {
           patientName:this.search
         }
       }).then(res =>{
+        console.log(res.data.records)
         this.tableData = res.data.records
         this.tableData.forEach(item =>{
           if(item.caseDesc === null || item.caseDesc === ""){
             item.caseDesc = "暂无诊断报告"
+          }
+          if(item.isPublic == false){
+            item.isPublic = '未公开'
+          }else {
+            item.isPublic = '公开'
           }
         })
         this.total=res.data.total

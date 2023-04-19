@@ -4,6 +4,9 @@ import {ElMessage} from 'element-plus';
 router.beforeEach((to, from, next) => {
   console.log("=======路由跳转需要匹配！！=======")
   console.log(to.matched);
+  if(to.matched.slice(-1)[0].path !=='/seePatientCp'){
+    sessionStorage.removeItem('dcId')
+  }
   let user = JSON.parse(sessionStorage.getItem('user')||"{}")
   if (to.matched.some(record => record.meta.requiresManage)) {
     if (user.role !== 1) {  // 管理员没登录
