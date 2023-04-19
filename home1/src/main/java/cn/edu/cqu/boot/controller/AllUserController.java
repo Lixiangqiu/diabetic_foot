@@ -312,6 +312,7 @@ public class AllUserController {
         IPage<OneInfo> doctorIPage = userService.selectJoinListPage(new Page<>(pageNum, pageSize), OneInfo.class,
                 new MPJLambdaWrapper<AllUser>()
                         .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                        .select(AllUser::getId)
                         .select(Doctor::getDoctorPosition, Doctor::getDoctorPic, Doctor::getDoctorDes)
                         .leftJoin(Doctor.class, Doctor::getDoctorId, AllUser::getId)
                         .eq(AllUser::getRole, 2)
