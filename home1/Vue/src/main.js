@@ -9,5 +9,6 @@ import 'dayjs/locale/zh-cn'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'bootstrap'
 import './permission'
+import XLSX from "xlsx/dist/xlsx.full.min";
 
 createApp(App).use(store).use(router).use(ElementPlus,{ locale,size:"small"}).mount('#app')
