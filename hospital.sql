@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 18/04/2023 19:25:37
+ Date: 19/04/2023 18:59:03
 */
 
 SET NAMES utf8mb4;
@@ -45,12 +45,14 @@ INSERT INTO `alluser` VALUES (36, '罗艳', '124a0660c90fc6e4ca14ea05dd72e33511f
 INSERT INTO `alluser` VALUES (39, '李军', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '52', '125225@163.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (40, '李莉', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '25', '2022255@google.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (41, '张三', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '35', '30222@qq.com', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
-INSERT INTO `alluser` VALUES (42, '马婷', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '23', '207734192@qq.com', 3, 'http://localhost:8887/files/76a4c2ae81a64906a30424103bebccb3');
+INSERT INTO `alluser` VALUES (42, '马婷', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '23', '207734192@qq.com', 3, 'http://localhost:8887/files/19789de69896474e86f04bb52efb935a');
 INSERT INTO `alluser` VALUES (43, '西喜爱', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '44', '101234@163.cn', 2, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (45, '1', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '24', '307725956@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (48, '白衣天使', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '女', '25', NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (49, '徐煜阳', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '30', '160524888@qq.com', 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
 INSERT INTO `alluser` VALUES (57, 'san', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', NULL, NULL, NULL, 3, 'http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703');
+INSERT INTO `alluser` VALUES (72, '三槑', 'd39dc54ec88a2d3ea0358f48984a2f7b4374940c53b16a5438189f9109512bd3', '男', '34', '2858126698@qq.com', 1, 'http://localhost:8887/files/0aec45be33f34c9a97d9a2447bbe4dcd');
+INSERT INTO `alluser` VALUES (73, '三槑病人', '124a0660c90fc6e4ca14ea05dd72e33511ff1df92bb5f3598a34470c64884ef4', '男', '19', '28@qq.com', 3, 'http://localhost:8887/files/18f9d2e33902444eb3ef0e5f69bd1442');
 
 -- ----------------------------
 -- Table structure for comment
@@ -131,16 +133,20 @@ CREATE TABLE `dc`  (
   `doctorId` int(0) NOT NULL,
   `doctorCon` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`dcId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of dc
 -- ----------------------------
-INSERT INTO `dc` VALUES (1, '2023-04-11', 2, 34, '出院');
-INSERT INTO `dc` VALUES (2, '2023-04-12', 3, 34, NULL);
+INSERT INTO `dc` VALUES (1, '2023-04-19', 2, 34, '测试');
+INSERT INTO `dc` VALUES (2, '2023-04-18', 4, 39, '测试连ji接i');
 INSERT INTO `dc` VALUES (3, '2023-04-13', 4, 34, '测试连接');
 INSERT INTO `dc` VALUES (4, '2023-04-14', 5, 39, NULL);
 INSERT INTO `dc` VALUES (5, '2023-04-18', 2, 39, '测试连接');
+INSERT INTO `dc` VALUES (6, '2023-04-18', 3, 39, '测试连ji接');
+INSERT INTO `dc` VALUES (7, '2023-04-18', 4, 39, '测试连ji接i');
+INSERT INTO `dc` VALUES (8, '2023-04-18', 5, 34, '测试连ji接ii');
+INSERT INTO `dc` VALUES (9, '2023-04-19', 3, 34, '测试3');
 
 -- ----------------------------
 -- Table structure for doctor
@@ -218,6 +224,7 @@ INSERT INTO `patient` VALUES (45, '王五', '男', 24, NULL, NULL, '307725956@qq
 INSERT INTO `patient` VALUES (48, '白衣天使', '女', 25, NULL, NULL, NULL);
 INSERT INTO `patient` VALUES (49, '徐煜阳', '男', 30, NULL, NULL, '160524888@qq.com');
 INSERT INTO `patient` VALUES (50, 'san', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `patient` VALUES (73, '三槑病人', '男', 19, '重庆', NULL, '28@qq.com');
 
 -- ----------------------------
 -- Table structure for problem
