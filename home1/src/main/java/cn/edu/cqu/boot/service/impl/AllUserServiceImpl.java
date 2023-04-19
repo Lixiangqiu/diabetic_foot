@@ -4,6 +4,7 @@ import cn.edu.cqu.boot.entity.AllUser;
 import cn.edu.cqu.boot.mapper.AllUserMapper;
 import cn.edu.cqu.boot.service.IAllUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.base.MPJBaseServiceImpl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class AllUserServiceImpl extends ServiceImpl<AllUserMapper, AllUser> implements IAllUserService {
+public class AllUserServiceImpl extends MPJBaseServiceImpl<AllUserMapper, AllUser> implements IAllUserService {
 
     @Resource
     private AllUserMapper alluserMapper;
