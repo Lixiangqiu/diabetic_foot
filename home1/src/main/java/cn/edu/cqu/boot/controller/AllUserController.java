@@ -20,11 +20,7 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Objects;
 
 @RestController
@@ -97,9 +93,9 @@ public class AllUserController {
 
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<null>
      * @Description 管理员新增用户(allUser, doctor, patient)
      * @Param [info]
-     * @return cn.edu.cqu.boot.config.Result<null>
      * @Date 2023/4/19 17:02
      * @Auther WangSanmu
      */
@@ -164,9 +160,9 @@ public class AllUserController {
 
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<null>
      * @Description 管理员修改自身个人信息
      * @Param [user]
-     * @return cn.edu.cqu.boot.config.Result<null>
      * @Date 2023/4/19 17:42
      * @Auther WangSanmu
      */
@@ -178,9 +174,9 @@ public class AllUserController {
 
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<null>
      * @Description 管理员或病人 修改病人个人信息
      * @Param [oneInfo]
-     * @return cn.edu.cqu.boot.config.Result<null>
      * @Date 2023/4/19 17:51
      * @Auther WangSanmu
      */
@@ -204,8 +200,10 @@ public class AllUserController {
 
         res1.setName(oneInfo.getName());
         res1.setAge(oneInfo.getAge());
-        FileDelete.deleteFile(res1.getPhoto());
-        res1.setPhoto(oneInfo.getPhoto());
+        if (!Objects.equals(oneInfo.getPhoto(), res1.getPhoto())) {
+            FileDelete.deleteFile(res1.getPhoto());
+            res1.setPhoto(oneInfo.getPhoto());
+        }
         res1.setPassword(oneInfo.getPassword());
         res1.setEmail(oneInfo.getEmail());
         res1.setGender(oneInfo.getGender());
@@ -217,9 +215,9 @@ public class AllUserController {
 
 
     /**
+     * @return cn.edu.cqu.boot.config.Result<null>
      * @Description 管理员或医生 修改医生个人信息
      * @Param [oneInfo]
-     * @return cn.edu.cqu.boot.config.Result<null>
      * @Date 2023/4/19 18:23
      * @Auther WangSanmu
      */
@@ -233,8 +231,10 @@ public class AllUserController {
         res.setEmail(oneInfo.getEmail());
         res.setAge(oneInfo.getAge());
         res.setGender(oneInfo.getGender());
-        FileDelete.deleteFile(res.getPhoto());
-        res.setPhoto(oneInfo.getPhoto());
+        if (!Objects.equals(oneInfo.getPhoto(), res.getPhoto())) {
+            FileDelete.deleteFile(res.getPhoto());
+            res.setPhoto(oneInfo.getPhoto());
+        }
         userService.updateById(res);
 
         // 修改doctor表
@@ -254,28 +254,50 @@ public class AllUserController {
         return Result.success();
     }
 
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Description 管理员修改信息【病人，其他管理员（已禁用），。。。
+     * @Param [user]
+     * @Date 2023/4/19 22:43
+     * @Auther WangSanmu
+     */
     @PutMapping("/updateData") //管理员更新信息
     public Result<?> updateData(@RequestBody AllUser user) {
+
         userService.updateById(user);
+
         if (user.getRole() == 2) {  //同步更新医生表
-            Doctor res = doctorMapper.selectOne(Wrappers.<Doctor>query().lambda().eq(Doctor::getDoctorId, user.getId()));
+            Doctor res = doctorService.getById(user.getId());
             res.setDoctorAge(user.getAge());
             res.setDoctorName(user.getName());
             doctorService.updateById(res);
         } else if (user.getRole() == 3) {  //同步更新病人表
-            Patient res = patientMapper.selectOne(Wrappers.<Patient>query().lambda().eq(Patient::getPatientId, user.getId()));
+            Patient res = patientService.getById(user.getId());
             res.setPatientName(user.getName());
             res.setPatientEmail(user.getEmail());
             res.setPatientGender(user.getGender());
             res.setPatientAge(user.getAge());
             patientService.updateById(res);
         }
+
         return Result.success();
     }
 
-    @DeleteMapping("/{id}")   //根据ID删除用户
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Description 管理员删除用户（管理员，医生，病人）
+     * @Param [id]
+     * @Date 2023/4/19 22:01
+     * @Auther WangSanmu
+     */
+    @DeleteMapping("/{id}")
     public Result<?> deleteData(@PathVariable Long id) {
+
         AllUser u = userService.getById(id);
+
+        // 判断医生/病人并删除相应记录
         if (u.getRole() == 2) {  //同步删除医生表
             QueryWrapper<Doctor> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("doctorId", u.getId());
@@ -286,29 +308,49 @@ public class AllUserController {
             queryWrapper.eq("patientId", u.getId());
             patientService.remove(queryWrapper);
         }
+
+        //删除allUser表记录
         userService.removeById(id);
+
         return Result.success();
     }
 
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<allUser>
+     * @Description 管理员展示界面（可查询）
+     * @Param [pageNum, pageSize, search]
+     * @Date 2023/4/19 22:27
+     * @Auther WangSanmu
+     */
     @GetMapping("/findPage")  //查询权限为管理员的用户
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "5") Integer pageSize,
                               @RequestParam(defaultValue = "") String search) {
-        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "1").like(AllUser::getName, search));
-        System.out.println(userIPage);
+//        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "1").like(AllUser::getName, search));
+
+        IPage<AllUser> userIPage = userService.page(new Page<>(pageNum, pageSize),
+                Wrappers.<AllUser>query().lambda().select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                        .eq(AllUser::getRole, 1)
+                        .like(AllUser::getName, search)
+        );
+
+//        System.out.println(userIPage);
         return Result.success(userIPage);
     }
 
-    @GetMapping("/findPage3")  //查询权限为医生的用户
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<OneInfo>
+     * @Description 医生展示界面（可查询）
+     * @Param [pageNum, pageSize, search]
+     * @Date 2023/4/19 22:09
+     * @Auther WangSanmu
+     */
+    @GetMapping("/findPage3")
     public Result<?> findPage3(@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "5") Integer pageSize,
                                @RequestParam(defaultValue = "") String search) {
-//        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "2").like(AllUser::getName, search));
-//        Doctor doctor = doctorMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
-//                eq(AllUser::getPassword, Hash.encode(user.getPassword())));
-//        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize),
-//                Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
-
         IPage<OneInfo> doctorIPage = userService.selectJoinListPage(new Page<>(pageNum, pageSize), OneInfo.class,
                 new MPJLambdaWrapper<AllUser>()
                         .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
@@ -318,53 +360,117 @@ public class AllUserController {
                         .eq(AllUser::getRole, 2)
                         .like(AllUser::getName, search)
         );
-        System.out.println(doctorIPage);
+//        System.out.println(doctorIPage);
         return Result.success(doctorIPage);
     }
 
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<OneInfo>
+     * @Description 病人展示界面（可查询）
+     * @Param [pageNum, pageSize, search]
+     * @Date 2023/4/19 22:20
+     * @Auther WangSanmu
+     */
     @GetMapping("/findPage2")   //查询权限为病人的用户
     public Result<?> findPage2(@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "5") Integer pageSize,
                                @RequestParam(defaultValue = "") String search) {
-        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "3").like(AllUser::getName, search));
-        System.out.println(userIPage);
+//        IPage<AllUser> userIPage = allUserMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<AllUser>query().lambda().eq(AllUser::getRole, "3").like(AllUser::getName, search));
+        IPage<OneInfo> userIPage = userService.selectJoinListPage(new Page<>(pageNum, pageSize), OneInfo.class,
+                new MPJLambdaWrapper<AllUser>()
+                        .select(AllUser.class, i -> !i.getProperty().startsWith("password"))
+                        .select(AllUser::getId)
+                        .select(Patient::getPatientPhone, Patient::getPatientAddress)
+                        .leftJoin(Patient.class, Patient::getPatientId, AllUser::getId)
+                        .eq(AllUser::getRole, 3)
+                        .like(AllUser::getName, search)
+        );
+//        System.out.println(userIPage);
         return Result.success(userIPage);
     }
 
 
+    /**
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Description 待用/淘汰....
+     * @Param [doctor]
+     * @Date 2023/4/19 23:15
+     * @Auther WangSanmu
+     */
     @PostMapping("/saveDoctorData")  //管理员增加医生
     public Result<?> saveDoctorData(@RequestBody Doctor doctor) {
         doctorService.save(doctor);
         return Result.success();
     }
 
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Description 未找到相关用法，可能淘汰
+     * @Param [doctor]
+     * @Date 2023/4/19 23:19
+     * @Auther WangSanmu
+     */
     @PutMapping("/updateDoctorData")  //管理员更新医师信息
     public Result<?> updateDoctorData(@RequestBody Doctor doctor) {
-        AllUser res = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, doctor.getDoctorId()));
+
+        AllUser res = userService.getById(doctor.getDoctorId());
+
         res.setAge(doctor.getDoctorAge());
         res.setName(doctor.getDoctorName());
+
         doctorService.updateById(doctor);
         userService.updateById(res);
+
         return Result.success();
     }
 
 
-    @GetMapping("/findAllDoctor")   //查询所有医生
+    /**
+     * @return cn.edu.cqu.boot.config.Result<Doctor>
+     * @Description 医生信息展示（面向病人）
+     * @Param [pageNum, pageSize, search]
+     * @Date 2023/4/19 23:24
+     * @Auther WangSanmu
+     */
+    @GetMapping("/findAllDoctor")
     public Result<?> findAllDoctor(@RequestParam(defaultValue = "1") Integer pageNum,
                                    @RequestParam(defaultValue = "3") Integer pageSize,
                                    @RequestParam(defaultValue = "") String search) {
-        IPage<Doctor> doctorIPage = doctorMapper.selectPage(new Page<>(pageNum, pageSize), Wrappers.<Doctor>query().lambda().like(Doctor::getDoctorName, search));
+        IPage<Doctor> doctorIPage = doctorService.page(new Page<>(pageNum, pageSize),
+                Wrappers.<Doctor>query().lambda()
+                        .like(Doctor::getDoctorName, search));
         System.out.println(doctorIPage);
+
         return Result.success(doctorIPage);
     }
 
-    @GetMapping("/findOneDoctor")   //查询医生详情
+
+    /**
+     * @Description 医生详情页页展示（面向病人）
+     * @Param [doctorId]
+     * @return cn.edu.cqu.boot.config.Result<Doctor>
+     * @Date 2023/4/19 23:31
+     * @Auther WangSanmu
+     */
+    @GetMapping("/findOneDoctor")
     public Result<?> findOneDoctor(@RequestParam(defaultValue = "1") Integer doctorId) {
-        Doctor d = doctorMapper.selectById(doctorId);
-        System.out.println(d);
+
+        Doctor d = doctorService.getById(doctorId);
+//        System.out.println(d);
+
         return Result.success(d);
     }
 
+
+    /**
+     * @Description 未找到相关用法
+     * @Param [userId, doctorId]
+     * @return cn.edu.cqu.boot.config.Result<?>
+     * @Date 2023/4/19 23:35
+     * @Auther WangSanmu
+     */
     @GetMapping("/selectDoctor")  //病人选择医生, @RequestParam Integer did+ did
     public Result<?> selectDoctor(@RequestParam Integer userId, @RequestParam Integer doctorId) {
         System.out.println(userId + "**12315**" + doctorId);
@@ -372,13 +478,25 @@ public class AllUserController {
         return Result.success();
     }
 
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<allUser>
+     * @Description 用户登录
+     * @Param [user]
+     * @Date 2023/4/19 20:19
+     * @Auther WangSanmu
+     */
     @PostMapping("/login")  //用户登录页
     public Result<?> login(@RequestBody AllUser user) throws Exception {
-        AllUser res = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
+
+        // 判断账号密码
+        AllUser res = userService.getOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()).
                 eq(AllUser::getPassword, Hash.encode(user.getPassword())));
         if (res == null) {
             return Result.error(-1, "用户名或密码错误");
         }
+
+        // 不返回密码
         res.setPassword(null);
 //        System.out.println(res);
 //        System.err.println("正在进行人脸检测...");
@@ -402,45 +520,57 @@ public class AllUserController {
         return Result.success(res);
     }
 
-    @PostMapping("/register")  //用户注册页 用户名不能重复
+
+    /**
+     * @return cn.edu.cqu.boot.config.Result<null>
+     * @Description 病人注册
+     * @Param [user]
+     * @Date 2023/4/19 20:16
+     * @Auther WangSanmu
+     */
+    @PostMapping("/register")
     public Result<?> register(@RequestBody AllUser user) throws Exception {
-        AllUser res = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()));
+
+        // 判断用户是否已存在
+        AllUser res = userService.getOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getName, user.getName()));
         if (res != null) {
             return Result.error(-1, "用户名重复");
         }
+
+        // 新增表allUser记录
         user.setPhoto("http://localhost:8887/files/cae603dda1974bc6bf347e4e2be2b703");
         user.setRole(3);
         user.setPassword(Hash.encode(user.getPassword()));
+
         userService.save(user);
 
+        // 新增表Patient记录
         Patient p = new Patient();
         p.setPatientId(user.getId());
         p.setPatientName(user.getName());
         p.setPatientEmail(user.getEmail());
+
         patientService.save(p);
+
         return Result.success();
     }
 
-    //    @PostMapping("/passwordModify")
-//    public Result<?> passwordModify(HttpServletRequest request, @RequestBody PasswordModify passwordModify) throws Exception {
-//        String userId = (String) request.getSession().getAttribute("id");
-//        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, userId));
-//        assert user != null;
-//        if (Objects.equals(passwordModify.getOldPassword(), user.getPassword())) {
-//            if (Objects.equals(passwordModify.getRePassword(), passwordModify.getNewPassword())) {
-//                user.setPassword(passwordModify.getNewPassword());
-//                userService.save(user);
-//                return Result.success();
-//            }
-//        } else {
-//            return Result.error(-1,"旧密码错误！");
-//        }
-//        return Result.success();
-//    }
+
+    /**
+     * @Description 修改密码
+     * @Param [passwordModify]
+     * @return cn.edu.cqu.boot.config.Result<msg>
+     * @Date 2023/4/19 23:39
+     * @Auther WangSanmu
+     */
     @PostMapping("/passwordModify")
     public Result<?> passwordModify(@RequestBody PasswordModify passwordModify) throws Exception {
-        AllUser user = allUserMapper.selectOne(Wrappers.<AllUser>query().lambda().eq(AllUser::getId, passwordModify.getId()));
+
+        // 检查用户
+        AllUser user = userService.getById(passwordModify.getId());
         assert user != null;
+
+        // 判断并修改密码
         if (Objects.equals(Hash.encode(passwordModify.getOldPassword()), user.getPassword())) {
             user.setPassword(Hash.encode(passwordModify.getNewPassword()));
             userService.updateById(user);
