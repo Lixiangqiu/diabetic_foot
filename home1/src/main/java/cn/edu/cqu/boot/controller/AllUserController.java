@@ -200,8 +200,10 @@ public class AllUserController {
 
         res1.setName(oneInfo.getName());
         res1.setAge(oneInfo.getAge());
-        FileDelete.deleteFile(res1.getPhoto());
-        res1.setPhoto(oneInfo.getPhoto());
+        if (!Objects.equals(oneInfo.getPhoto(), res1.getPhoto())) {
+            FileDelete.deleteFile(res1.getPhoto());
+            res1.setPhoto(oneInfo.getPhoto());
+        }
         res1.setPassword(oneInfo.getPassword());
         res1.setEmail(oneInfo.getEmail());
         res1.setGender(oneInfo.getGender());
@@ -229,8 +231,10 @@ public class AllUserController {
         res.setEmail(oneInfo.getEmail());
         res.setAge(oneInfo.getAge());
         res.setGender(oneInfo.getGender());
-        FileDelete.deleteFile(res.getPhoto());
-        res.setPhoto(oneInfo.getPhoto());
+        if (!Objects.equals(oneInfo.getPhoto(), res.getPhoto())) {
+            FileDelete.deleteFile(res.getPhoto());
+            res.setPhoto(oneInfo.getPhoto());
+        }
         userService.updateById(res);
 
         // 修改doctor表
