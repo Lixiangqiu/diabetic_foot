@@ -180,7 +180,7 @@
             <el-input v-model="form.patientPhone" style="margin-bottom: 20px"></el-input>
           </el-form-item>
           <el-form-item label="图片">
-            <el-upload class="upload-demo" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
+            <el-upload class="upload-demo" ref="upload" action="http://localhost:8887/files/upload" :on-success="filesUploadSuccess">
               <el-button type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -339,6 +339,7 @@ export default {
             })
           }
         })
+      this.$refs.upload.clearFiles();
       this.dialogVisible2 = false
     },
     updateDoctor() {
@@ -363,6 +364,7 @@ export default {
           })
         }
       })
+      this.$refs.upload.clearFiles();
       this.dialogVisible2 = false
     },
     update() {
@@ -385,6 +387,7 @@ export default {
           })
         }
       })
+      this.$refs.upload.clearFiles();
       this.dialogVisible2 = false
     },
 

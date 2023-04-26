@@ -62,6 +62,10 @@
         <div id="main1" style="width:400px;height:400px"></div>
         <div id="main2" style="width:400px;height:400px"></div>
       </div>
+      <div style="display: flex;">
+        <div id="main4" style="width:400px;height:500px"></div>
+        <div id="main5" style="width:400px;height:500px"></div>
+      </div>
       <el-upload
           ref="upload"
           action="/wm/upload"
@@ -155,7 +159,6 @@ export default {
         }
       }).then(res => {
         this.cp = res.data
-        console.log('cp',this.cp)
         let max1 = Math.max(this.cp.paraT1,this.cp.paraM1,this.cp.paraM2,this.cp.paraM3,this.cp.paraM4,this.cp.paraM5,this.cp.paraHL,this.cp.paraHM)
         let max2 = Math.max(this.cp.paraRT1,this.cp.paraRM1,this.cp.paraRM2,this.cp.paraRM3,this.cp.paraRM4,this.cp.paraRM5,this.cp.paraRHL,this.cp.paraRHM)
         this.max = Math.max(max1,max2)
@@ -186,7 +189,6 @@ export default {
         //console.log(this.cp.paraHL)
         this.$nextTick(()=>{
           this.draw()
-          // this.draw3()
         })
       this.init()
       
@@ -232,7 +234,7 @@ export default {
         this.dc.doctorId = this.user.id
         this.dc.cpId = this.cp.cpId
         this.dc.doctorCon = this.desc
-        console.log('dc',this.dc)
+        // console.log('dc',this.dc)
         request.post("/api/dc/newDoctorCon", this.dc).then(res => {
           if (res.code === 0) {
             this.$message({
@@ -318,7 +320,7 @@ export default {
     draw2(a){
       let chartDom  = document.getElementById('main2');
       let myChart  = echarts.init(chartDom);
-      //console.log()
+      // console.log('a',a)
       for(let i=0;i<a.length;i++){
         let item={
           type: 'line',
@@ -428,14 +430,14 @@ export default {
 
    
     draw3(result){
-      console.log('result',result)
+
       var chartDom = document.getElementById('main3');
       var myChart = echarts.init(chartDom);
       var option;
       var url = result
-      $.get('', function (data) {
-        console.log('data',result)
-        let date = result
+      $.get('', function (data) {  
+        data = result
+        console.log('data',data)
         myChart.setOption(
           (option = {
             title: {
@@ -451,7 +453,7 @@ export default {
               bottom: '10%'
             },
             xAxis: {
-              data: date.map(function (item) {
+              data: data.map(function (item) {
                 return item[0];
               })
             },
@@ -468,8 +470,8 @@ export default {
             },
             dataZoom: [
               {
-                startValue: date[0][0],
-                endValue: date[100][0]
+                startValue: data[0][0],
+                endValue: data[100][0]
               },
               {
                 type: 'inside'
@@ -516,7 +518,7 @@ export default {
             series: {
               name: '足部压力时间积分表',
               type: 'line',
-              data: date.map(function (item) {
+              data: data.map(function (item) {
                 return item[1];
               }),
               markLine: {
@@ -538,8 +540,17 @@ export default {
                     yAxis: 200
                   },
                   {
+                    yAxis: 250
+                  },
+                  {
                     yAxis: 300
-                  }
+                  },
+                  {
+                    yAxis: 350
+                  },
+                  {
+                    yAxis: 400
+                  },
                 ]
               }
             }
@@ -549,9 +560,108 @@ export default {
 
       option && myChart.setOption(option);
     },
+
+    draw4(a){
+      var chartDom = document.getElementById('main4');
+      var myChart = echarts.init(chartDom);
+      var option;
+      let data = []
+      for(let j = 0;j<a.length;j++){
+        data.push({value:a[j],name:this.date[j]})
+      }
+      option = {
+        title: {
+          text: '左脚平均压力',
+          left:150,
+          top:0
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          bottom:0,
+          data: this.date
+        },
+        radar: {
+          // shape: 'circle',
+          top:20,
+          indicator: [
+            { name: '大脚趾', max: 10 },
+            { name: '第一跖骨', max: 10 },
+            { name: '第二\n跖骨', max: 10 },
+            { name: '第三跖骨', max: 10 },
+            { name: '第四跖骨', max: 10 },
+            { name: '第五跖骨', max: 10 },
+            { name: '足后跟\n外侧', max: 10 },
+            { name: '足后跟内侧', max: 10 }
+          ]
+        },
+        series: [
+          {
+            name: '左脚平均压力',
+            type: 'radar',
+            tooltip: {
+              trigger: 'item'
+            },
+            // areaStyle: {},
+            data:data
+          }
+        ]
+      };
+      option && myChart.setOption(option);
+    },
+    draw5(b){
+      var chartDom = document.getElementById('main5');
+      var myChart = echarts.init(chartDom);
+      var option;
+      let data = []
+      for(let j = 0;j<b.length;j++){
+        data.push({value:b[j],name:this.date[j]})
+      }
+      data[0].areaStyle = {color:'black'}
+      option = {
+        title: {
+          text: '右脚平均压力',
+          left:150,
+          top:0
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          bottom:0,
+          data: this.date
+        },
+        radar: {
+          // shape: 'circle',
+          top:20,
+          indicator: [
+            { name: '大脚趾', max: 10 },
+            { name: '第一跖骨', max: 10 },
+            { name: '第二\n跖骨', max: 10 },
+            { name: '第三跖骨', max: 10 },
+            { name: '第四跖骨', max: 10 },
+            { name: '第五跖骨', max: 10 },
+            { name: '足后跟\n外侧', max: 10 },
+            { name: '足后跟内侧', max: 10 }
+          ]
+        },
+        series: [
+          {
+            name: '左脚平均压力',
+            type: 'radar',
+            tooltip: {
+              trigger: 'item'
+            },
+            // areaStyle: {},
+            data:data
+          }
+        ]
+      };
+      option && myChart.setOption(option);
+    },
     init(){
       request.post("/api/cp/cpByPatientId",this.cp).then(res=>{
-        //console.log(res)
         for(let i = 0;i < res.data.length; i++){
           this.date.push(res.data[i].date)
           this.paraR.push(res.data[i].paraRT1,res.data[i].paraRM1,res.data[i].paraRM2,res.data[i].paraRM3,res.data[i].paraRM4,res.data[i].paraRM5,res.data[i].paraRHL,res.data[i].paraRHM)
@@ -561,13 +671,14 @@ export default {
           this.paraL = []
           this.paraR = []
         }
-        //console.log(this.paraLData)
         const a = toRaw(this.paraLData)
         const b = toRaw(this.paraRData)
         console.log(b)
         this.$nextTick(()=>{
           this.draw1(a)
           this.draw2(b)
+          this.draw4(a)
+          this.draw5(b)
         })
       })
     }

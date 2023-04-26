@@ -12,18 +12,8 @@
             style="width: 100%">
           <el-table-column
               align="center"
-              prop="date"
-              label="日期" width="100px">
-          </el-table-column>
-          <el-table-column
-              align="center"
-              prop="doctorName"
-              label="医生姓名" width="100px">
-          </el-table-column>
-          <el-table-column
-              align="center"
               prop="patientName"
-              label="姓名">
+              label="患者姓名">
           </el-table-column>
           <el-table-column
               align="center"
@@ -37,8 +27,18 @@
           </el-table-column>
           <el-table-column
               align="center"
+              prop="doctorName"
+              label="诊断医生姓名" width="100px">
+          </el-table-column>
+          <el-table-column
+              align="center"
               prop="caseDesc"
               label="诊断报告">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="date"
+              label="日期" width="100px">
           </el-table-column>
           <el-table-column
               align="center"

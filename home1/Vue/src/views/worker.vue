@@ -53,7 +53,7 @@
                 cancelButtonText='不用了'
                 icon="el-icon-info"
                 iconColor="red"
-                title="这是一段内容确定删除吗？" @confirm="handleDelete(scope.row.doctorId)"
+                title="这是一段内容确定删除吗？" @confirm="handleDelete(scope.row.id)"
             >
               <template #reference>
                 <el-button type="danger" icon="el-icon-delete" circle size="small"></el-button>
@@ -173,6 +173,7 @@ export default {
               type:"success",
               message:"修改成功"
             })
+            this.$refs.upload.clearFiles();
             this.dialogVisible = false
             setTimeout(() => {
               location.reload()
@@ -183,6 +184,7 @@ export default {
               type:"error",
               message:"修改失败"
             })
+            this.$refs.upload.clearFiles();
           } 
           
           
@@ -195,6 +197,7 @@ export default {
               type:"success",
               message:"添加成功"
             })
+            this.$refs.upload.clearFiles();
             this.dialogVisible = false
             setTimeout(() => {
               location.reload()
@@ -204,6 +207,7 @@ export default {
               type:"error",
               message:"添加失败"
             })
+            this.$refs.upload.clearFiles();
           }
         })
       }
